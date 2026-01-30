@@ -37,40 +37,36 @@ AI-powered fish tank monitoring that watches your aquarium 24/7, alerts you when
 
 ---
 
-## Quick Start (2 minutes)
+## Quick Start
 
-### 1. Clone & Install
+### Option A: Telegram Setup (Recommended)
+
+If you have [Clawdbot](https://github.com/clawdbot/clawdbot), just say:
+
+> "Set up fish watcher" or "Monitor my fish tank"
+
+Your AI assistant will:
+1. Install everything automatically
+2. Find your camera
+3. Send you a test snapshot to confirm
+4. Start monitoring
+
+All via Telegram chat. No terminal needed.
+
+---
+
+### Option B: Manual Setup (2 minutes)
 
 ```bash
+# 1. Clone & Install
 git clone https://github.com/oh-ashen-one/fish-watcher.git
 cd fish-watcher
 pip install -r requirements.txt
-```
 
-### 2. Test Your Camera
-
-```bash
+# 2. Test Camera
 python test_camera.py
-```
 
-This will:
-- Find all connected cameras
-- Show you which device number to use
-- Save a test snapshot so you can verify it's pointing at your tank
-
-### 3. Configure (Optional)
-
-Edit `config.yaml` if needed:
-
-```yaml
-camera:
-  type: "usb"
-  device: 0  # Change if test_camera.py shows a different number
-```
-
-### 4. Run It
-
-```bash
+# 3. Run
 python run.py
 ```
 
@@ -152,6 +148,23 @@ All settings in `config.yaml`:
 | `detection.no_motion_threshold` | Seconds before "no motion" alert | 300 (5 min) |
 | `alerts.cooldown` | Min seconds between same alert | 60 |
 | `alerts.clip_cool_moments` | Also clip good moments, not just problems | true |
+
+---
+
+## Telegram Commands
+
+Once set up with Clawdbot, just chat naturally:
+
+| You Say | What Happens |
+|---------|--------------|
+| "Set up fish watcher" | Guided setup wizard |
+| "How are my fish?" | Current tank status |
+| "Show me the tank" | Live snapshot |
+| "Fish report" | Today's health summary |
+| "Start/stop fish watcher" | Control monitoring |
+| "Make it more sensitive" | Adjust detection |
+| "Name my fish Gerald and Nemo" | Personalize alerts |
+| "Show recent clips" | Get alert videos |
 
 ---
 
