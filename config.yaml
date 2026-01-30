@@ -125,3 +125,12 @@ feeding:
   frequency: ""         # e.g., "twice daily", "once in morning"
   times: []             # e.g., ["09:00", "18:00"]
   detection_window: 30  # minutes to watch for feeding activity after scheduled time
+
+# === Live Stream ===
+stream:
+  # Password for accessing the live stream (set during onboarding)
+  # URL will be: http://localhost:5555/?p=<password>
+  password: ""          # SET THIS during setup!
+  port: 5555
+  fps: 60
+  quality: 85           # JPEG quality (1-100)

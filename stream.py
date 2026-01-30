@@ -2,7 +2,7 @@
 """
 Fish Watcher Live Stream Server
 MJPEG stream with timestamp overlay
-LOCAL ONLY - secured with token auth
+LOCAL ONLY - secured with password auth
 """
 
 import cv2
