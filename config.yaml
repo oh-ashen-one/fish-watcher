@@ -1,72 +1,115 @@
-# Fish Watcher Configuration
-# Customize these settings for your setup
+# Fish Watcher Configuration v1.0
+# Full-featured fish tank monitoring
 
 camera:
   # Options: "usb", "ip", "rtsp"
   type: "usb"
-  # For USB: device index (usually 0)
+  # For USB: device index (usually 0, try 1 if wrong camera)
   device: 0
   # For IP/RTSP: full URL
   # url: "rtsp://192.168.1.100:554/stream"
-  # url: "http://192.168.1.100:4747/video"  # DroidCam example
+  # url: "http://192.168.1.100:4747/video"  # DroidCam
+  # url: "http://192.168.1.100:8080/video"  # IP Webcam app
   
-  # Resolution (lower = faster processing)
   width: 640
   height: 480
   fps: 15
 
 recording:
-  # Seconds to keep in rolling buffer (before trigger)
+  # Seconds to keep before trigger (rolling buffer)
   pre_roll: 10
   # Seconds to record after trigger
   post_roll: 30
-  # Output directory for clips
+  # Total clip = pre_roll + post_roll = 40 seconds
   output_dir: "./clips"
-  # Clip format
   format: "mp4"
 
 detection:
-  # Motion detection sensitivity (0-100, higher = more sensitive)
+  # Motion detection (0-100, higher = more sensitive)
   motion_sensitivity: 50
   
-  # No motion alert - seconds before alerting
+  # No motion alert threshold (seconds)
   no_motion_threshold: 300  # 5 minutes
   
-  # Color change detection (for water cloudiness)
+  # Water color change threshold
   color_change_threshold: 15
   
-  # Surface detection (fish floating at top)
-  surface_zone_percent: 15  # Top 15% of frame
+  # Zone detection (% of frame)
+  surface_zone_percent: 15  # Top 15% = surface
+  bottom_zone_percent: 15   # Bottom 15% = substrate
   
-  # Activity baseline - learns normal patterns
+  # Activity baseline learning
   learn_baseline: true
   baseline_hours: 24
 
 alerts:
-  # Cooldown between alerts (seconds)
+  # Cooldown between same alert type (seconds)
   cooldown: 60
   
-  # What to detect
+  # === Health/Emergency Detection ===
   detect_no_motion: true
   detect_motion_spike: true
-  detect_color_change: true
-  detect_surface_activity: true
-  detect_unusual_pattern: true
+  detect_erratic_swimming: true
+  detect_surface_gasping: true
+  detect_bottom_stuck: true
   
-  # Also clip "cool moments" (not just problems)
-  clip_interesting_moments: true
+  # === Tank Issue Detection ===
+  detect_color_change: true
+  detect_cloudiness: true
+  detect_algae: true
+  detect_filter_stopped: true
+  
+  # === Behavior Detection ===
+  detect_clustering: true
+  detect_low_activity: true
+  detect_hiding: true
+  
+  # === Cool Moments (not problems) ===
+  clip_cool_moments: true
+  detect_feeding_frenzy: true
+  detect_interesting_activity: true
+  cool_moment_cooldown: 300  # 5 min between cool clips
+
+reports:
+  # Generate daily reports
+  daily_report: true
+  daily_report_time: "20:00"  # 8 PM
+  
+  # Generate weekly reports
+  weekly_report: true
+  weekly_report_day: "sunday"
+  
+  # Store report data
+  data_dir: "./data"
 
 notification:
-  # How to notify (clawdbot integration)
+  # How to notify
   method: "clawdbot"
-  # Or use webhook
-  # webhook_url: "https://your-webhook.com/notify"
+  # Alternative: webhook
+  # method: "webhook"
+  # webhook_url: "https://your-webhook.com/fish-alert"
+  
+  # Workspace for Clawdbot integration
+  workspace_dir: "~/clawd"
 
-# Fish profiles (optional - for personality)
+# === Fish Profiles (optional) ===
+# Name your fish for personalized alerts!
 fish:
-  # - name: "Gerald"
-  #   species: "Betta"
-  #   color: "blue"
-  # - name: "Nemo"  
-  #   species: "Clownfish"
-  #   color: "orange"
+  count: 0  # 0 = auto-detect
+  # profiles:
+  #   - name: "Gerald"
+  #     species: "Betta"
+  #     color: "blue"
+  #   - name: "Nemo"
+  #     species: "Clownfish"  
+  #     color: "orange"
+  #   - name: "Dory"
+  #     species: "Blue Tang"
+  #     color: "blue"
+
+# === Feeding Schedule (optional) ===
+# Helps detect missed feedings
+feeding:
+  enabled: false
+  # times: ["09:00", "18:00"]
+  # detection_window: 30  # minutes to watch for feeding activity

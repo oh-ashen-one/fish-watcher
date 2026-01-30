@@ -25,22 +25,52 @@ class ClawdbotNotifier:
     
     # Alert type to emoji mapping
     EMOJI_MAP = {
+        # Health/Emergency
         AlertType.NO_MOTION: "⚠️",
         AlertType.MOTION_SPIKE: "🚨",
+        AlertType.FISH_FLOATING: "☠️",
+        AlertType.FISH_BOTTOM: "⬇️",
+        AlertType.ERRATIC_SWIMMING: "🌀",
+        AlertType.GASPING_SURFACE: "😮",
+        AlertType.AGGRESSION: "⚔️",
+        
+        # Tank Issues
         AlertType.COLOR_CHANGE: "💧",
+        AlertType.WATER_CLOUDY: "🌫️",
+        AlertType.ALGAE_GROWTH: "🌿",
+        AlertType.WATER_LEVEL_DROP: "📉",
+        AlertType.FILTER_STOPPED: "🔌",
+        AlertType.LIGHT_STUCK: "💡",
+        
+        # Behavior
         AlertType.SURFACE_ACTIVITY: "🐟",
-        AlertType.UNUSUAL_PATTERN: "❓",
+        AlertType.HIDING_TOO_LONG: "🙈",
+        AlertType.MISSED_FEEDING: "🍽️",
+        AlertType.CLUSTERING: "👥",
+        AlertType.LOW_ACTIVITY: "😴",
+        
+        # Cool Moments
         AlertType.INTERESTING_MOMENT: "✨",
+        AlertType.FEEDING_FRENZY: "🎉",
+        AlertType.FISH_PLAYING: "🎮",
+        AlertType.NEW_BEHAVIOR: "🆕",
     }
     
     # Priority levels
     PRIORITY_MAP = {
         AlertType.NO_MOTION: "high",
-        AlertType.MOTION_SPIKE: "medium", 
+        AlertType.MOTION_SPIKE: "medium",
+        AlertType.FISH_FLOATING: "critical",
+        AlertType.FISH_BOTTOM: "high",
+        AlertType.ERRATIC_SWIMMING: "high",
+        AlertType.GASPING_SURFACE: "critical",
         AlertType.COLOR_CHANGE: "medium",
-        AlertType.SURFACE_ACTIVITY: "high",
-        AlertType.UNUSUAL_PATTERN: "low",
+        AlertType.WATER_CLOUDY: "medium",
+        AlertType.FILTER_STOPPED: "high",
+        AlertType.SURFACE_ACTIVITY: "medium",
+        AlertType.LOW_ACTIVITY: "medium",
         AlertType.INTERESTING_MOMENT: "low",
+        AlertType.FEEDING_FRENZY: "low",
     }
     
     def __init__(self, workspace_dir: str = None):
