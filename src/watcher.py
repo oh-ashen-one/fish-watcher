@@ -14,6 +14,7 @@ from .buffer import RollingBuffer
 from .detector import FishWatcherDetector, DetectorConfig, Alert
 from .recorder import ClipRecorder
 from .notifier import ClawdbotNotifier, WebhookNotifier
+from .reports import ReportGenerator
 
 
 class FishWatcher:
@@ -52,6 +53,11 @@ class FishWatcher:
             self.notifier = WebhookNotifier(self.config['notification'].get('webhook_url', ''))
         else:
             self.notifier = ClawdbotNotifier()
+        
+        # Setup reports
+        self.reports = ReportGenerator(
+            data_dir=self.config.get('reports', {}).get('data_dir', './data')
+        )
         
         self.camera: Optional[cv2.VideoCapture] = None
         
@@ -112,10 +118,11 @@ class FishWatcher:
                 
                 # If recording, add frame to recorder
                 if self.recorder.is_recording:
-                    clip_path = self.recorder.add_frame(frame)
+                    clip_path, alert = self.recorder.add_frame(frame)
                     if clip_path:
                         # Recording complete, send notification
-                        self._send_notification(self.recorder.current_alert, clip_path)
+                        self._send_notification(alert, clip_path)
+                        self.reports.record_clip()
                 
                 # Run detection (skip if actively recording)
                 if not self.recorder.is_recording:
@@ -123,6 +130,7 @@ class FishWatcher:
                     
                     for alert in alerts:
                         print(f"[FishWatcher] Alert: {alert.type.value} - {alert.message}")
+                        self.reports.record_alert(alert.type.value, alert.is_cool_moment)
                         self.recorder.start_recording(self.buffer, alert)
                         break  # Only handle one alert at a time
                 

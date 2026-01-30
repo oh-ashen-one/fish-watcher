@@ -53,20 +53,22 @@ class ClipRecorder:
             self.current_frames = [f.frame for f in pre_frames]
             print(f"[Recorder] Started clip with {len(self.current_frames)} pre-roll frames")
     
-    def add_frame(self, frame: np.ndarray) -> Optional[str]:
-        """Add a frame to current recording. Returns clip path when done."""
+    def add_frame(self, frame: np.ndarray) -> tuple[Optional[str], Optional[Alert]]:
+        """Add a frame to current recording. Returns (clip_path, alert) when done."""
         with self.lock:
             if not self.recording:
-                return None
+                return None, None
             
             self.current_frames.append(frame.copy())
             
             # Check if post-roll complete
             elapsed = time.time() - self.recording_start
             if elapsed >= self.post_roll:
-                return self._save_clip()
+                alert = self.current_alert  # Save before clearing
+                clip_path = self._save_clip()
+                return clip_path, alert
             
-            return None
+            return None, None
     
     def _save_clip(self) -> str:
         """Save the current clip to disk."""
