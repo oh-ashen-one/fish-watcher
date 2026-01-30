@@ -63,7 +63,13 @@ When user mentions fish tank monitoring, fish watcher, or wants to set up camera
    - Any other relevant info
    - Save to config.yaml tank section
 
-7. Start the watcher:
+7. Stream password:
+   - "Set a password for your live stream (so only you can watch):"
+   - User provides password
+   - Save to config.yaml: `stream.password: <their password>`
+   - Confirm: "Got it! Your stream will be at `localhost:5555/?p=<password>`"
+
+8. Start the watcher:
    ```bash
    cd ~/clawd/repos/fish-watcher && python run.py &
    ```
@@ -191,9 +197,9 @@ The stream is **local-only** and **token-protected**. Only the user with the uni
    cd ~/clawd/repos/fish-watcher && python stream.py &
    ```
 
-2. Read the generated token:
+2. Get password from config:
    ```bash
-   cat ~/clawd/repos/fish-watcher/.stream_token
+   grep password ~/clawd/repos/fish-watcher/config.yaml
    ```
 
 3. Send the user their **private** link:
@@ -201,9 +207,9 @@ The stream is **local-only** and **token-protected**. Only the user with the uni
    🐟 Live Feed Active — Jan 29, 8:20 PM
    
    📺 Your private stream:
-   http://localhost:5555/?token=<TOKEN>
+   http://localhost:5555/?p=<PASSWORD>
    
-   🔐 This link is unique to you — don't share it.
+   🔐 Password-protected — only you can view.
    Open in browser to watch your tank live!
    ```
 
@@ -211,13 +217,13 @@ The stream is **local-only** and **token-protected**. Only the user with the uni
    ```bash
    ngrok http 5555
    ```
-   Then send: `https://<ngrok-url>/?token=<TOKEN>`
+   Then send: `https://<ngrok-url>/?p=<PASSWORD>`
 
 **Security:**
 - Server binds to 127.0.0.1 only (no direct external access)
-- Unique token generated on each start
-- Token required for all endpoints — no token = 403 Forbidden
-- Only the user with the link can view
+- Password set during onboarding (saved in config.yaml)
+- Password required for all endpoints — wrong password = 403 Forbidden
+- Only the user with the password can view
 
 **Stream features:**
 - MJPEG stream (works in any browser)

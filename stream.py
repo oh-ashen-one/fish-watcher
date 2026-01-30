@@ -15,19 +15,11 @@ from pathlib import Path
 
 app = Flask(__name__)
 
-# Generate a unique access token on each start
-ACCESS_TOKEN = secrets.token_urlsafe(16)
-TOKEN_FILE = Path(__file__).parent / ".stream_token"
-
-# Save token so agent can retrieve it
-TOKEN_FILE.write_text(ACCESS_TOKEN)
-
-
-def require_token(f):
-    """Decorator to require valid token"""
+def require_password(f):
+    """Decorator to require valid password"""
     def wrapper(*args, **kwargs):
-        token = request.args.get('token')
-        if token != ACCESS_TOKEN:
+        pwd = request.args.get('p') or request.args.get('password')
+        if pwd != STREAM_PASSWORD:
             abort(403)
         return f(*args, **kwargs)
     wrapper.__name__ = f.__name__
@@ -35,12 +27,19 @@ def require_token(f):
 
 # Load config
 config_path = Path(__file__).parent / "config.yaml"
+config = {}
 if config_path.exists():
     with open(config_path) as f:
-        config = yaml.safe_load(f)
-    CAMERA_DEVICE = config.get("camera", {}).get("device", 0)
-else:
-    CAMERA_DEVICE = 0
+        config = yaml.safe_load(f) or {}
+
+CAMERA_DEVICE = config.get("camera", {}).get("device", 0)
+
+# Stream password - from config or generate random
+STREAM_PASSWORD = config.get("stream", {}).get("password")
+if not STREAM_PASSWORD:
+    # Fallback to random token if no password configured
+    STREAM_PASSWORD = secrets.token_urlsafe(16)
+    print(f"⚠️  No password in config — using random token: {STREAM_PASSWORD}")
 
 # Stream settings
 FRAME_WIDTH = 640
@@ -59,7 +58,7 @@ def add_timestamp(frame):
     # Add timestamp text
     cv2.putText(
         frame,
-        f"🐟 {timestamp}",
+        f"LIVE {timestamp}",
         (10, 28),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.7,
@@ -113,10 +112,10 @@ def generate_frames():
 
 
 @app.route('/')
-@require_token
+@require_password
 def index():
     """Simple HTML page with the stream"""
-    token = request.args.get('token')
+    pwd = request.args.get('p') or request.args.get('password')
     return f'''
     <!DOCTYPE html>
     <html>
@@ -160,7 +159,7 @@ def index():
     <body>
         <h1>🐟 Fish Watcher Live</h1>
         <div class="stream-container">
-            <img src="/stream?token={token}" alt="Live Feed">
+            <img src="/stream?p={pwd}" alt="Live Feed">
         </div>
         <div class="status">● Live</div>
     </body>
@@ -169,7 +168,7 @@ def index():
 
 
 @app.route('/stream')
-@require_token
+@require_password
 def stream():
     """MJPEG stream endpoint"""
     return Response(
@@ -180,10 +179,10 @@ def stream():
 
 if __name__ == '__main__':
     print("🐟 Fish Watcher Live Stream")
-    print(f"📺 Secure URL: http://localhost:5555/?token={ACCESS_TOKEN}")
+    print(f"📺 Stream URL: http://localhost:5555/?p={STREAM_PASSWORD}")
     print(f"📷 Camera: Device {CAMERA_DEVICE}")
-    print(f"🔐 Token saved to: {TOKEN_FILE}")
-    print("\n⚠️  Only share this link with the user — token required for access")
+    print(f"🔐 Password: {STREAM_PASSWORD}")
+    print("\n⚠️  Only share this link with the user!")
     print("Press Ctrl+C to stop\n")
     
     # Bind to localhost only — no external access without tunnel
