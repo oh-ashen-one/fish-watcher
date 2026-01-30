@@ -1,0 +1,72 @@
+# Fish Watcher Configuration
+# Customize these settings for your setup
+
+camera:
+  # Options: "usb", "ip", "rtsp"
+  type: "usb"
+  # For USB: device index (usually 0)
+  device: 0
+  # For IP/RTSP: full URL
+  # url: "rtsp://192.168.1.100:554/stream"
+  # url: "http://192.168.1.100:4747/video"  # DroidCam example
+  
+  # Resolution (lower = faster processing)
+  width: 640
+  height: 480
+  fps: 15
+
+recording:
+  # Seconds to keep in rolling buffer (before trigger)
+  pre_roll: 10
+  # Seconds to record after trigger
+  post_roll: 30
+  # Output directory for clips
+  output_dir: "./clips"
+  # Clip format
+  format: "mp4"
+
+detection:
+  # Motion detection sensitivity (0-100, higher = more sensitive)
+  motion_sensitivity: 50
+  
+  # No motion alert - seconds before alerting
+  no_motion_threshold: 300  # 5 minutes
+  
+  # Color change detection (for water cloudiness)
+  color_change_threshold: 15
+  
+  # Surface detection (fish floating at top)
+  surface_zone_percent: 15  # Top 15% of frame
+  
+  # Activity baseline - learns normal patterns
+  learn_baseline: true
+  baseline_hours: 24
+
+alerts:
+  # Cooldown between alerts (seconds)
+  cooldown: 60
+  
+  # What to detect
+  detect_no_motion: true
+  detect_motion_spike: true
+  detect_color_change: true
+  detect_surface_activity: true
+  detect_unusual_pattern: true
+  
+  # Also clip "cool moments" (not just problems)
+  clip_interesting_moments: true
+
+notification:
+  # How to notify (clawdbot integration)
+  method: "clawdbot"
+  # Or use webhook
+  # webhook_url: "https://your-webhook.com/notify"
+
+# Fish profiles (optional - for personality)
+fish:
+  # - name: "Gerald"
+  #   species: "Betta"
+  #   color: "blue"
+  # - name: "Nemo"  
+  #   species: "Clownfish"
+  #   color: "orange"
