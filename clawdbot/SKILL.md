@@ -129,6 +129,14 @@ AI: ✅ Got it!
     • 20 gallon freshwater
     • Tropical flakes, twice daily
     
+    🔐 One more thing — set a password for your live stream 
+    (so only you can watch):
+
+User: "fish123"
+
+AI: ✅ Password set! Your live stream will be at:
+    http://localhost:5555/?p=fish123
+    
     Ready to start watching?
 
 User: "yes"

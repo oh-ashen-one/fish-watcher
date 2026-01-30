@@ -15,16 +15,6 @@ from pathlib import Path
 
 app = Flask(__name__)
 
-def require_password(f):
-    """Decorator to require valid password"""
-    def wrapper(*args, **kwargs):
-        pwd = request.args.get('p') or request.args.get('password')
-        if pwd != STREAM_PASSWORD:
-            abort(403)
-        return f(*args, **kwargs)
-    wrapper.__name__ = f.__name__
-    return wrapper
-
 # Load config
 config_path = Path(__file__).parent / "config.yaml"
 config = {}
@@ -54,22 +44,47 @@ FRAME_WIDTH = camera_config.get("width", 640)
 FRAME_HEIGHT = camera_config.get("height", 480)
 
 
+def require_password(f):
+    """Decorator to require valid password"""
+    def wrapper(*args, **kwargs):
+        pwd = request.args.get('p') or request.args.get('password')
+        if pwd != STREAM_PASSWORD:
+            abort(403)
+        return f(*args, **kwargs)
+    wrapper.__name__ = f.__name__
+    return wrapper
+
+
 def add_timestamp(frame):
     """Add timestamp overlay to frame"""
     timestamp = datetime.now().strftime("%b %d, %I:%M:%S %p")
+    text = f"LIVE  {timestamp}"
     
-    # Add black background for readability
-    cv2.rectangle(frame, (5, 5), (280, 35), (0, 0, 0), -1)
+    # Calculate text size to fit background properly
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = 0.6
+    thickness = 2
+    (text_width, text_height), baseline = cv2.getTextSize(text, font, font_scale, thickness)
+    
+    # Add black background with padding
+    padding = 10
+    cv2.rectangle(
+        frame, 
+        (5, 5), 
+        (5 + text_width + padding * 2, 5 + text_height + padding * 2), 
+        (0, 0, 0), 
+        -1
+    )
     
     # Add timestamp text
     cv2.putText(
         frame,
-        f"LIVE {timestamp}",
-        (10, 28),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        0.7,
+        text,
+        (5 + padding, 5 + padding + text_height),
+        font,
+        font_scale,
         (0, 255, 255),  # Cyan color
-        2
+        thickness
     )
     return frame
 
