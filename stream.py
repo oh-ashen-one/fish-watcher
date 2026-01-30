@@ -45,8 +45,8 @@ else:
 # Stream settings
 FRAME_WIDTH = 640
 FRAME_HEIGHT = 480
-FPS = 15
-QUALITY = 80  # JPEG quality
+FPS = 60  # Smooth 60fps
+QUALITY = 85  # JPEG quality
 
 
 def add_timestamp(frame):

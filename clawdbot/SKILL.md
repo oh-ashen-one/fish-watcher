@@ -222,8 +222,8 @@ The stream is **local-only** and **token-protected**. Only the user with the uni
 **Stream features:**
 - MJPEG stream (works in any browser)
 - Timestamp overlay on every frame (top-left corner)
-- ~15 FPS for smooth viewing
-- Low latency (~200ms)
+- 60 FPS smooth streaming
+- Low latency
 
 **To stop:**
 ```bash
