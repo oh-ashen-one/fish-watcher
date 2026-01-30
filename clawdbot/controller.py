@@ -262,11 +262,66 @@ def list_clips(limit: int = 10):
     return result
 
 
+def capture_ai_view(device: int = 0, output: str = None):
+    """Capture a frame with AI overlay (tracking boxes, names, stats)."""
+    import cv2
+    import yaml
+    
+    fw_dir = get_fish_watcher_dir()
+    sys.path.insert(0, str(fw_dir))
+    from src.overlay import OverlayRenderer
+    
+    # Load config for fish profiles and tank info
+    config_path = fw_dir / "config.yaml"
+    fish_profiles = []
+    tank_info = {}
+    
+    if config_path.exists():
+        with open(config_path) as f:
+            config = yaml.safe_load(f)
+            fish_profiles = config.get("fish", {}).get("profiles", [])
+            tank_info = config.get("tank", {})
+    
+    # Open camera
+    cap = cv2.VideoCapture(device)
+    if not cap.isOpened():
+        print(json.dumps({"success": False, "error": f"Cannot open camera {device}"}))
+        return None
+    
+    # Create renderer
+    renderer = OverlayRenderer(fish_profiles, tank_info)
+    
+    # Capture several frames to let tracking stabilize
+    for _ in range(15):
+        ret, frame = cap.read()
+        if ret:
+            renderer.render(frame)  # Update tracking
+    
+    # Capture final frame with overlay
+    ret, frame = cap.read()
+    cap.release()
+    
+    if not ret:
+        print(json.dumps({"success": False, "error": "Failed to capture frame"}))
+        return None
+    
+    # Render with overlay
+    output_frame = renderer.render(frame)
+    
+    # Save
+    if output is None:
+        output = fw_dir / "ai_view.jpg"
+    
+    cv2.imwrite(str(output), output_frame)
+    print(json.dumps({"success": True, "path": str(output)}))
+    return str(output)
+
+
 def main():
     """CLI entry point."""
     if len(sys.argv) < 2:
         print("Usage: controller.py <command> [args]")
-        print("Commands: status, start, stop, cameras, capture, config, report, alert, clips")
+        print("Commands: status, start, stop, cameras, capture, ai-view, config, report, alert, clips")
         sys.exit(1)
     
     cmd = sys.argv[1]
@@ -282,6 +337,9 @@ def main():
     elif cmd == "capture":
         device = int(sys.argv[2]) if len(sys.argv) > 2 else 0
         capture_frame(device)
+    elif cmd == "ai-view":
+        device = int(sys.argv[2]) if len(sys.argv) > 2 else 0
+        capture_ai_view(device)
     elif cmd == "config":
         if len(sys.argv) < 4:
             print("Usage: controller.py config <key> <value>")

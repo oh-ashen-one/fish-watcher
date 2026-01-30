@@ -136,12 +136,107 @@ def step_save_config(device: int):
         "status": "saved",
         "device": device,
         "message": f"✅ **Configuration saved!**\n\nCamera {device} is now set as your fish tank camera.",
-        "next": "start"
+        "next": "fish_profiles"
     }
 
 
+def save_fish_profiles(profiles: list):
+    """Save fish profiles to config."""
+    fw_dir = Path(__file__).parent.parent
+    config_path = fw_dir / "config.yaml"
+    
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+    
+    config["fish"] = {
+        "count": len(profiles),
+        "profiles": profiles
+    }
+    
+    with open(config_path, "w") as f:
+        yaml.dump(config, f, default_flow_style=False)
+    
+    return True
+
+
+def step_fish_profiles():
+    """Step 5: Ask about fish."""
+    return {
+        "step": "fish_profiles",
+        "status": "ask",
+        "message": "🐟 **Tell me about your fish!**\n\nHow many fish do you have in this tank?\n\n(This helps me give you personalized alerts like 'Gerald looks stressed' instead of 'Fish #1 alert')",
+        "input_type": "number",
+        "options": ["1", "2", "3", "4", "5+", "Skip this"]
+    }
+
+
+def step_name_fish(count: int, current: int = 1, profiles: list = None):
+    """Step 5b: Name each fish."""
+    if profiles is None:
+        profiles = []
+    
+    if current > count:
+        return {
+            "step": "fish_profiles",
+            "status": "complete",
+            "profiles": profiles,
+            "message": f"🐟 **Got it!** I'll remember:\n\n" + "\n".join([f"• **{p['name']}** - {p['description']}" for p in profiles]),
+            "next": "start"
+        }
+    
+    return {
+        "step": "name_fish",
+        "status": "ask",
+        "current": current,
+        "total": count,
+        "profiles_so_far": profiles,
+        "message": f"🐟 **Fish {current} of {count}**\n\nWhat's this fish's name? And give me a quick description (species, color, any quirks).\n\nExample: 'Gerald - blue betta, likes to hide in the castle'",
+        "input_type": "text"
+    }
+
+
+def step_tank_details():
+    """Step 6: Ask about tank setup."""
+    return {
+        "step": "tank_details",
+        "status": "ask",
+        "message": """🏠 **Tank Details**
+
+A few more questions so I can give you smarter alerts:
+
+1. **Tank size?** (e.g., "20 gallon", "10L")
+2. **Freshwater or saltwater?**
+3. **What do you feed them?** (e.g., "flakes", "pellets", "frozen brine shrimp")
+4. **How often?** (e.g., "twice a day", "once in morning")
+
+Just type it all out naturally, like:
+"20 gallon freshwater, I feed them flakes twice a day, morning and evening"
+""",
+        "input_type": "text"
+    }
+
+
+def save_tank_details(details: dict):
+    """Save tank details to config."""
+    fw_dir = Path(__file__).parent.parent
+    config_path = fw_dir / "config.yaml"
+    
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+    
+    if "tank" not in config:
+        config["tank"] = {}
+    
+    config["tank"].update(details)
+    
+    with open(config_path, "w") as f:
+        yaml.dump(config, f, default_flow_style=False)
+    
+    return True
+
+
 def step_start_watcher():
-    """Step 5: Offer to start watching."""
+    """Step 7: Offer to start watching."""
     return {
         "step": "start",
         "status": "ready",
@@ -150,19 +245,29 @@ def step_start_watcher():
     }
 
 
-def step_complete():
+def step_complete(fish_profiles: list = None):
     """Setup complete."""
+    fish_line = ""
+    if fish_profiles:
+        names = [p["name"] for p in fish_profiles]
+        if len(names) == 1:
+            fish_line = f"\n\nI'll be keeping an eye on **{names[0]}**! 🐟"
+        elif len(names) == 2:
+            fish_line = f"\n\nI'll be keeping an eye on **{names[0]}** and **{names[1]}**! 🐟"
+        else:
+            fish_line = f"\n\nI'll be keeping an eye on **{', '.join(names[:-1])}**, and **{names[-1]}**! 🐟"
+    
     return {
         "step": "complete",
         "status": "done",
-        "message": """🎉 **Fish Watcher is running!**
+        "message": f"""🎉 **Fish Watcher is running!**
 
 I'm now monitoring your tank 24/7. Here's what I'll do:
 
 🚨 **Alert you** if fish stop moving, act weird, or water looks off
 📹 **Save clips** of any issues (10 sec before + 30 sec after)
 ✨ **Capture cool moments** like feeding frenzies
-📊 **Send daily reports** on tank health
+📊 **Send daily reports** on tank health{fish_line}
 
 **Quick commands:**
 • "How are my fish?" - current status
@@ -170,7 +275,7 @@ I'm now monitoring your tank 24/7. Here's what I'll do:
 • "Fish report" - today's summary
 • "Stop fish watcher" - pause monitoring
 
-Your fish are in good hands! 🐟"""
+Your fish are in good hands!"""
     }
 
 

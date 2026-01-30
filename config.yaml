@@ -92,24 +92,36 @@ notification:
   # Workspace for Clawdbot integration
   workspace_dir: "~/clawd"
 
-# === Fish Profiles (optional) ===
+# === Tank Setup ===
+tank:
+  size: ""              # e.g., "20 gallon", "75L"
+  type: "freshwater"    # freshwater, saltwater, brackish
+  temperature: ""       # e.g., "78F", "25C"
+  notes: ""             # any other relevant info
+
+# === Fish Profiles ===
 # Name your fish for personalized alerts!
 fish:
   count: 0  # 0 = auto-detect
-  # profiles:
+  profiles: []
+  # Example profiles:
   #   - name: "Gerald"
-  #     species: "Betta"
-  #     color: "blue"
+  #     species: "Betta splendens"
+  #     description: "blue betta, he's the boss"
+  #     personality: "aggressive, territorial"
   #   - name: "Nemo"
-  #     species: "Clownfish"  
-  #     color: "orange"
+  #     species: "Amphiprion ocellaris"
+  #     description: "clownfish, very active"
+  #     personality: "friendly, curious"
   #   - name: "Dory"
-  #     species: "Blue Tang"
-  #     color: "blue"
+  #     species: "Paracanthurus hepatus"
+  #     description: "blue tang, a bit shy"
+  #     personality: "timid, hides when stressed"
 
-# === Feeding Schedule (optional) ===
-# Helps detect missed feedings
+# === Feeding Schedule ===
 feeding:
   enabled: false
-  # times: ["09:00", "18:00"]
-  # detection_window: 30  # minutes to watch for feeding activity
+  food_type: ""         # e.g., "flakes", "pellets", "frozen brine shrimp"
+  frequency: ""         # e.g., "twice daily", "once in morning"
+  times: []             # e.g., ["09:00", "18:00"]
+  detection_window: 30  # minutes to watch for feeding activity after scheduled time
