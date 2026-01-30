@@ -32,20 +32,26 @@ if config_path.exists():
     with open(config_path) as f:
         config = yaml.safe_load(f) or {}
 
-CAMERA_DEVICE = config.get("camera", {}).get("device", 0)
+# Stream config
+stream_config = config.get("stream", {})
 
 # Stream password - from config or generate random
-STREAM_PASSWORD = config.get("stream", {}).get("password")
+STREAM_PASSWORD = stream_config.get("password")
 if not STREAM_PASSWORD:
     # Fallback to random token if no password configured
     STREAM_PASSWORD = secrets.token_urlsafe(16)
     print(f"⚠️  No password in config — using random token: {STREAM_PASSWORD}")
 
-# Stream settings
-FRAME_WIDTH = 640
-FRAME_HEIGHT = 480
-FPS = 60  # Smooth 60fps
-QUALITY = 85  # JPEG quality
+# Stream settings from config (with defaults)
+STREAM_PORT = stream_config.get("port", 5555)
+FPS = stream_config.get("fps", 60)
+QUALITY = stream_config.get("quality", 85)
+
+# Camera settings from config
+camera_config = config.get("camera", {})
+CAMERA_DEVICE = camera_config.get("device", 0)
+FRAME_WIDTH = camera_config.get("width", 640)
+FRAME_HEIGHT = camera_config.get("height", 480)
 
 
 def add_timestamp(frame):
@@ -179,11 +185,12 @@ def stream():
 
 if __name__ == '__main__':
     print("🐟 Fish Watcher Live Stream")
-    print(f"📺 Stream URL: http://localhost:5555/?p={STREAM_PASSWORD}")
-    print(f"📷 Camera: Device {CAMERA_DEVICE}")
+    print(f"📺 Stream URL: http://localhost:{STREAM_PORT}/?p={STREAM_PASSWORD}")
+    print(f"📷 Camera: Device {CAMERA_DEVICE} ({FRAME_WIDTH}x{FRAME_HEIGHT})")
+    print(f"🎬 FPS: {FPS} | Quality: {QUALITY}")
     print(f"🔐 Password: {STREAM_PASSWORD}")
     print("\n⚠️  Only share this link with the user!")
     print("Press Ctrl+C to stop\n")
     
     # Bind to localhost only — no external access without tunnel
-    app.run(host='127.0.0.1', port=5555, threaded=True)
+    app.run(host='127.0.0.1', port=STREAM_PORT, threaded=True)
