@@ -2,16 +2,36 @@
 """
 Fish Watcher Live Stream Server
 MJPEG stream with timestamp overlay
+LOCAL ONLY - secured with token auth
 """
 
 import cv2
 import yaml
 import time
+import secrets
 from datetime import datetime
-from flask import Flask, Response
+from flask import Flask, Response, request, abort
 from pathlib import Path
 
 app = Flask(__name__)
+
+# Generate a unique access token on each start
+ACCESS_TOKEN = secrets.token_urlsafe(16)
+TOKEN_FILE = Path(__file__).parent / ".stream_token"
+
+# Save token so agent can retrieve it
+TOKEN_FILE.write_text(ACCESS_TOKEN)
+
+
+def require_token(f):
+    """Decorator to require valid token"""
+    def wrapper(*args, **kwargs):
+        token = request.args.get('token')
+        if token != ACCESS_TOKEN:
+            abort(403)
+        return f(*args, **kwargs)
+    wrapper.__name__ = f.__name__
+    return wrapper
 
 # Load config
 config_path = Path(__file__).parent / "config.yaml"
@@ -93,9 +113,11 @@ def generate_frames():
 
 
 @app.route('/')
+@require_token
 def index():
     """Simple HTML page with the stream"""
-    return '''
+    token = request.args.get('token')
+    return f'''
     <!DOCTYPE html>
     <html>
     <head>
@@ -138,7 +160,7 @@ def index():
     <body>
         <h1>🐟 Fish Watcher Live</h1>
         <div class="stream-container">
-            <img src="/stream" alt="Live Feed">
+            <img src="/stream?token={token}" alt="Live Feed">
         </div>
         <div class="status">● Live</div>
     </body>
@@ -147,6 +169,7 @@ def index():
 
 
 @app.route('/stream')
+@require_token
 def stream():
     """MJPEG stream endpoint"""
     return Response(
@@ -157,8 +180,11 @@ def stream():
 
 if __name__ == '__main__':
     print("🐟 Fish Watcher Live Stream")
-    print(f"📺 Open http://localhost:5555 in your browser")
+    print(f"📺 Secure URL: http://localhost:5555/?token={ACCESS_TOKEN}")
     print(f"📷 Camera: Device {CAMERA_DEVICE}")
+    print(f"🔐 Token saved to: {TOKEN_FILE}")
+    print("\n⚠️  Only share this link with the user — token required for access")
     print("Press Ctrl+C to stop\n")
     
-    app.run(host='0.0.0.0', port=5555, threaded=True)
+    # Bind to localhost only — no external access without tunnel
+    app.run(host='127.0.0.1', port=5555, threaded=True)

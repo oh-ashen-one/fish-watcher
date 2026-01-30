@@ -180,7 +180,9 @@ These are conversational, not slash commands:
 
 ---
 
-## 🎥 Live Camera Stream
+## 🎥 Live Camera Stream (Secure, Local-Only)
+
+The stream is **local-only** and **token-protected**. Only the user with the unique link can view it.
 
 **When user asks to watch live:**
 
@@ -189,23 +191,33 @@ These are conversational, not slash commands:
    cd ~/clawd/repos/fish-watcher && python stream.py &
    ```
 
-2. The server runs on `http://localhost:5555`
-
-3. For remote access, start ngrok:
+2. Read the generated token:
    ```bash
-   ngrok http 5555
+   cat ~/clawd/repos/fish-watcher/.stream_token
    ```
 
-4. Send the user the link:
+3. Send the user their **private** link:
    ```
    🐟 Live Feed Active — Jan 29, 8:20 PM
    
-   📺 Local: http://localhost:5555
-   🌐 Remote: [ngrok URL]
+   📺 Your private stream:
+   http://localhost:5555/?token=<TOKEN>
    
+   🔐 This link is unique to you — don't share it.
    Open in browser to watch your tank live!
-   Timestamp overlay included on stream.
    ```
+
+4. For **remote access** (e.g., user is on phone/away):
+   ```bash
+   ngrok http 5555
+   ```
+   Then send: `https://<ngrok-url>/?token=<TOKEN>`
+
+**Security:**
+- Server binds to 127.0.0.1 only (no direct external access)
+- Unique token generated on each start
+- Token required for all endpoints — no token = 403 Forbidden
+- Only the user with the link can view
 
 **Stream features:**
 - MJPEG stream (works in any browser)
