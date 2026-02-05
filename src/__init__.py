@@ -8,8 +8,9 @@ from .buffer import RollingBuffer
 from .recorder import ClipRecorder
 from .notifier import ClawdbotNotifier
 from .reports import ReportGenerator
+from .vision import ClaudeVisionAnalyzer, analyze_for_clawdbot
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __all__ = [
     "FishWatcher",
     "FishWatcherDetector", 
@@ -19,4 +20,6 @@ __all__ = [
     "ClipRecorder",
     "ClawdbotNotifier",
     "ReportGenerator",
+    "ClaudeVisionAnalyzer",
+    "analyze_for_clawdbot",
 ]

@@ -10,6 +10,7 @@ from typing import Optional
 from dataclasses import dataclass
 
 from .detector import Alert, AlertType
+from .vision import ClaudeVisionAnalyzer, analyze_for_clawdbot
 
 
 @dataclass
@@ -73,9 +74,11 @@ class ClawdbotNotifier:
         AlertType.FEEDING_FRENZY: "low",
     }
     
-    def __init__(self, workspace_dir: str = None):
+    def __init__(self, workspace_dir: str = None, enable_vision: bool = True):
         self.workspace_dir = Path(workspace_dir) if workspace_dir else Path.home() / "clawd"
         self.alert_log = self.workspace_dir / "fish-watcher-alerts.json"
+        self.enable_vision = enable_vision
+        self.vision_analyzer = ClaudeVisionAnalyzer() if enable_vision else None
         
     def notify(self, alert: Alert, clip_path: Optional[str] = None) -> NotificationResult:
         """Send an alert notification."""
@@ -97,6 +100,17 @@ class ClawdbotNotifier:
         
         message = "\n".join(message_parts)
         
+        # Run vision analysis if enabled
+        vision_analysis = None
+        if self.enable_vision and clip_path and Path(clip_path).exists():
+            print(f"[Notifier] Running Claude vision analysis on {clip_path}...")
+            try:
+                vision_analysis = analyze_for_clawdbot(clip_path)
+                if vision_analysis and "error" not in vision_analysis:
+                    print(f"[Notifier] Vision analysis: {vision_analysis.get('summary', 'N/A')}")
+            except Exception as e:
+                print(f"[Notifier] Vision analysis failed: {e}")
+        
         # Log the alert
         self._log_alert(alert, clip_path)
         
@@ -109,6 +123,7 @@ class ClawdbotNotifier:
             "priority": priority,
             "timestamp": alert.timestamp,
             "confidence": alert.confidence,
+            "vision_analysis": vision_analysis,
         }
         
         try:

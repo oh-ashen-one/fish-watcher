@@ -92,6 +92,15 @@ notification:
   # Workspace for Clawdbot integration
   workspace_dir: "~/clawd"
 
+# === Vision Analysis (Claude) ===
+vision:
+  # Use Claude vision to analyze clips for smarter insights
+  enabled: true
+  # Model to use (requires ANTHROPIC_API_KEY env var or claude CLI)
+  model: "claude-sonnet-4-20250514"
+  # Number of frames to sample from clips
+  sample_frames: 3
+
 # === Tank Setup ===
 tank:
   size: ""              # e.g., "20 gallon", "75L"

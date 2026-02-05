@@ -57,6 +57,32 @@ Password protected — only share the URL with people you trust.
 
 ---
 
+## 🧠 Claude Vision Analysis (NEW!)
+
+When an alert triggers, Fish Watcher can use Claude to analyze the clip and provide intelligent insights:
+
+```
+📊 Vision Analysis:
+   Summary: Fish appears to be resting near bottom, normal behavior for this time of day
+   Severity: normal
+   👁️ Observations:
+      - Clear water with good visibility
+      - Fish colors appear healthy and vibrant
+      - Normal fin position and movement
+   💡 Recommendations:
+      - No action needed
+```
+
+**Setup:** Set `ANTHROPIC_API_KEY` env var or have `claude` CLI installed. Enable in config:
+
+```yaml
+vision:
+  enabled: true
+  model: "claude-sonnet-4-20250514"
+```
+
+---
+
 ## Quick Start
 
 ### Option A: Telegram Setup (Recommended)
@@ -270,6 +296,68 @@ Get a daily summary at 8 PM:
 ## License
 
 MIT - do whatever you want with it.
+
+---
+
+## 🖥️ Web Dashboard
+
+Fish Watcher includes a beautiful web dashboard for monitoring your tank from any browser.
+
+### Start the Dashboard
+
+```bash
+# Install dashboard dependencies
+pip install -r requirements.txt
+
+# Run the dashboard
+python dashboard.py
+
+# Or with custom options
+python dashboard.py --port 8080 --host 0.0.0.0  # LAN access
+```
+
+Dashboard will be available at: **http://localhost:8080**
+
+### Dashboard Features
+
+| Page | What It Shows |
+|------|---------------|
+| **Dashboard** | Health score, recent alerts, live preview, clips |
+| **Live Stream** | Full-screen live feed from your tank |
+| **Clips** | Browse, play, and download recorded clips |
+| **Reports** | Daily/weekly health reports with charts |
+| **Settings** | Current configuration view |
+
+### API Endpoints
+
+The dashboard also provides a REST API:
+
+```
+GET /api/status       - Current status and health score
+GET /api/clips        - List all clips
+GET /api/clips/{file} - Download a specific clip
+GET /api/alerts       - Alert history
+GET /api/reports/daily  - Today's report
+GET /api/reports/weekly - Weekly report
+GET /api/stats        - Historical statistics
+GET /api/config       - Current configuration
+```
+
+### Screenshots
+
+Dashboard home:
+```
+┌─────────────────────────────────────────────────┐
+│  🐟 Fish Watcher                                │
+├─────────────────────────────────────────────────┤
+│  Health: 92/100  │  Alerts: 2  │  Clips: 5     │
+├─────────────────────────────────────────────────┤
+│  📺 Live Preview          │  🚨 Recent Alerts  │
+│  ┌─────────────────────┐  │  ⚠️ no_motion     │
+│  │    [Live Feed]      │  │  ✨ feeding_frenzy │
+│  └─────────────────────┘  │                    │
+└─────────────────────────────────────────────────┘
+```
 
 ---
 
