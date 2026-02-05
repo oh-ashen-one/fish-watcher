@@ -37,6 +37,26 @@ AI-powered fish tank monitoring that watches your aquarium 24/7, alerts you when
 
 ---
 
+## 🖥️ Web Dashboard (NEW!)
+
+Access everything from your browser:
+
+```bash
+python dashboard.py
+```
+
+Opens at `http://localhost:5555/?p=<password>`
+
+**Features:**
+- **Dashboard** — Health score, alerts today, recent activity
+- **Clips Browser** — Watch all recorded clips with inline video player
+- **Live Stream** — Real-time camera feed with timestamp overlay
+- **API** — JSON endpoints for integrations (`/api/status`, `/api/clips`, `/api/alerts`)
+
+Password protected — only share the URL with people you trust.
+
+---
+
 ## Quick Start
 
 ### Option A: Telegram Setup (Recommended)
@@ -225,6 +245,17 @@ Get a daily summary at 8 PM:
 
 🐟 Your fish are thriving!
 ```
+
+---
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `python run.py` | Start 24/7 monitoring |
+| `python dashboard.py` | Launch web dashboard |
+| `python stream.py` | Live stream only |
+| `python test_camera.py` | Test camera connection |
 
 ---
 
