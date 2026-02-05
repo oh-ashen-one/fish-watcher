@@ -1,6 +1,8 @@
 # 🐟 Fish Watcher
 
+[![CI](https://github.com/oh-ashen-one/fish-watcher/actions/workflows/ci.yml/badge.svg)](https://github.com/oh-ashen-one/fish-watcher/actions/workflows/ci.yml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Docker](https://img.shields.io/badge/docker-ready-2496ED.svg)](https://www.docker.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 **AI-powered fish tank monitoring** — watches your aquarium 24/7, alerts you when something's wrong, and clips cool moments.
@@ -223,6 +225,24 @@ Each tank gets its own:
 - Clips folder (`./clips/<tank_id>/`)
 - Data/reports (`./data/<tank_id>/`)
 - Fish profiles
+
+---
+
+## 🐳 Docker
+
+```bash
+# Run with Docker Compose
+docker-compose up -d
+
+# Or build manually
+docker build -t fish-watcher .
+docker run -d --device /dev/video0 -p 5555:5555 -v ./clips:/app/clips fish-watcher
+```
+
+The compose file includes:
+- `watcher` — Main monitoring service
+- `dashboard` — Web dashboard on port 5555
+- `multi` — Multi-tank mode (run with `--profile multi`)
 
 ---
 

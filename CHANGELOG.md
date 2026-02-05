@@ -11,10 +11,14 @@ All notable changes to Fish Watcher will be documented here.
   - Independent detection settings
   - Example config: `tanks.example.yaml`
 - `TankConfig`, `TankWatcher`, `MultiTankWatcher` classes
+- **Docker Support** — Dockerfile and docker-compose.yml
+  - Easy deployment with `docker-compose up`
+  - Multi-tank mode with `--profile multi`
+- **GitHub Actions CI** — Automated linting, testing, and Docker builds
 
 ### Changed
 - Bumped version to 1.2.0
-- Updated README with multi-tank documentation
+- Updated README with multi-tank and Docker documentation
 
 ## [1.1.0] - 2026-02-05
 

@@ -1,0 +1,54 @@
+# Fish Watcher Docker Compose
+# Usage:
+#   docker-compose up -d          # Start watcher
+#   docker-compose up dashboard   # Start dashboard only
+#   docker-compose logs -f        # View logs
+
+version: "3.8"
+
+services:
+  watcher:
+    build: .
+    container_name: fish-watcher
+    restart: unless-stopped
+    devices:
+      - /dev/video0:/dev/video0  # USB camera (adjust device number if needed)
+    volumes:
+      - ./clips:/app/clips
+      - ./data:/app/data
+      - ./config.yaml:/app/config.yaml:ro
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    command: python run.py
+
+  dashboard:
+    build: .
+    container_name: fish-dashboard
+    restart: unless-stopped
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./clips:/app/clips:ro
+      - ./data:/app/data:ro
+      - ./config.yaml:/app/config.yaml:ro
+    command: python dashboard.py
+    depends_on:
+      - watcher
+
+  # Multi-tank mode (alternative to single watcher)
+  multi:
+    build: .
+    container_name: fish-multi
+    restart: unless-stopped
+    profiles:
+      - multi  # Only runs with: docker-compose --profile multi up
+    devices:
+      - /dev/video0:/dev/video0
+      - /dev/video1:/dev/video1  # Add more cameras as needed
+    volumes:
+      - ./clips:/app/clips
+      - ./data:/app/data
+      - ./tanks.yaml:/app/tanks.yaml:ro
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    command: python run_multi.py
