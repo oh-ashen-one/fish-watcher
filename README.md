@@ -274,6 +274,22 @@ fish-watcher/
 
 ---
 
+## 🔢 Fish Counter
+
+Real-time fish counting with bounding boxes:
+
+```bash
+# Live camera
+python -m src.fish_counter 0
+
+# From image
+python -m src.fish_counter tank_photo.jpg
+```
+
+Uses background subtraction + blob detection. The stable count smooths out noise.
+
+---
+
 ## ⚙️ Configuration Reference
 
 | Setting | Default | Description |

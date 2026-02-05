@@ -15,6 +15,10 @@ All notable changes to Fish Watcher will be documented here.
   - Easy deployment with `docker-compose up`
   - Multi-tank mode with `--profile multi`
 - **GitHub Actions CI** — Automated linting, testing, and Docker builds
+- **Fish Counter** (`src/fish_counter.py`) — Real-time fish counting with bounding boxes
+  - Background subtraction + blob detection
+  - Stable count smoothing
+  - CLI tool for camera or image analysis
 
 ### Changed
 - Bumped version to 1.2.0
