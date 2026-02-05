@@ -5,24 +5,39 @@ __pycache__/
 *.so
 .Python
 venv/
+env/
 ENV/
 .env
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
 
-# Clips (don't commit videos)
+# Clips and data (don't commit user data)
 clips/
+data/
 *.mp4
 *.avi
+*.mov
 
 # IDE
 .vscode/
 .idea/
 *.swp
+*.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# Logs
+# Logs and state
 *.log
 fish-watcher-alerts.json
 fish-watcher-pending-alert.json
+
+# Test outputs
+test_*.jpg
+test_*.png
+snapshot_*.jpg

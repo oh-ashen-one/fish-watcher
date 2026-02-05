@@ -1,45 +1,52 @@
 # 🐟 Fish Watcher
 
-AI-powered fish tank monitoring that watches your aquarium 24/7, alerts you when something's wrong, and clips cool moments.
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-## What It Does
+**AI-powered fish tank monitoring** — watches your aquarium 24/7, alerts you when something's wrong, and clips cool moments.
 
-### 🚨 Health & Emergency Detection
-- Fish not moving (dead/sick check)
-- Fish floating at surface
-- Fish stuck at bottom
-- Erratic swimming (spinning, darting)
-- Gasping at surface (oxygen issues)
-- Fish aggression
-
-### 🔧 Tank Issue Detection
-- Water cloudiness
-- Algae growth (green tint)
-- Filter stopped (no bubbles)
-- Water color changes
-
-### 🐟 Behavior Analysis
-- Fish clustering in corners (stress)
-- Hiding too long
-- Activity levels below normal
-- Fish count tracking
-
-### ✨ Cool Moment Capture
-- Feeding frenzies
-- Interesting activity
-- Fish playing/interacting
-- Unusual behaviors worth saving
-
-### 📊 Reports
-- Daily health score (0-100)
-- Weekly trends
-- Activity tracking
+<p align="center">
+  <img src="https://img.shields.io/badge/🐟-Fish_Watcher-00d4ff?style=for-the-badge" alt="Fish Watcher">
+</p>
 
 ---
 
-## 🖥️ Web Dashboard (NEW!)
+## ✨ Features
 
-Access everything from your browser:
+| Category | What It Does |
+|----------|--------------|
+| 🚨 **Health Detection** | Dead/sick fish, floating, stuck at bottom, erratic swimming, gasping |
+| 🔧 **Tank Monitoring** | Water cloudiness, algae, color changes, filter stopped |
+| 🐟 **Behavior Analysis** | Clustering, hiding, low activity, fish count tracking |
+| 📹 **Clip Recording** | Auto-records alerts with 10s pre-roll buffer |
+| 🧠 **AI Analysis** | Claude vision analyzes clips for intelligent insights |
+| 🖥️ **Web Dashboard** | View status, clips, and live stream from any browser |
+| 📊 **Reports** | Daily health scores and weekly trends |
+
+---
+
+## 🚀 Quick Start
+
+```bash
+# Clone
+git clone https://github.com/oh-ashen-one/fish-watcher.git
+cd fish-watcher
+
+# Install
+pip install -r requirements.txt
+
+# Test camera
+python test_camera.py
+
+# Run
+python run.py
+```
+
+That's it. Now watching your tank 24/7.
+
+---
+
+## 🖥️ Web Dashboard
 
 ```bash
 python dashboard.py
@@ -47,101 +54,55 @@ python dashboard.py
 
 Opens at `http://localhost:5555/?p=<password>`
 
-**Features:**
-- **Dashboard** — Health score, alerts today, recent activity
-- **Clips Browser** — Watch all recorded clips with inline video player
-- **Live Stream** — Real-time camera feed with timestamp overlay
-- **API** — JSON endpoints for integrations (`/api/status`, `/api/clips`, `/api/alerts`)
+| Page | Features |
+|------|----------|
+| **Dashboard** | Health score, alerts today, recent activity at a glance |
+| **Clips** | Browse and play all recorded clips with inline video |
+| **Live** | Real-time camera feed with timestamp overlay |
 
-Password protected — only share the URL with people you trust.
+**API Endpoints:**
+- `GET /api/status` — Current health and alerts
+- `GET /api/clips` — List all clips
+- `GET /api/alerts` — Recent alert history
 
 ---
 
-## 🧠 Claude Vision Analysis (NEW!)
+## 🧠 Claude Vision Analysis
 
-When an alert triggers, Fish Watcher can use Claude to analyze the clip and provide intelligent insights:
+When alerts trigger, Claude analyzes the clip:
 
 ```
 📊 Vision Analysis:
-   Summary: Fish appears to be resting near bottom, normal behavior for this time of day
+   Summary: Fish resting near bottom, normal behavior
    Severity: normal
-   👁️ Observations:
-      - Clear water with good visibility
-      - Fish colors appear healthy and vibrant
-      - Normal fin position and movement
-   💡 Recommendations:
+   Observations:
+      - Clear water, good visibility
+      - Healthy colors, normal fin position
+   Recommendations:
       - No action needed
 ```
 
-**Setup:** Set `ANTHROPIC_API_KEY` env var or have `claude` CLI installed. Enable in config:
-
-```yaml
-vision:
-  enabled: true
-  model: "claude-sonnet-4-20250514"
-```
+**Enable:** Set `ANTHROPIC_API_KEY` or install `claude` CLI.
 
 ---
 
-## Quick Start
+## 📷 Camera Setup
 
-### Option A: Telegram Setup (Recommended)
-
-If you have [Clawdbot](https://github.com/clawdbot/clawdbot), just say:
-
-> "Set up fish watcher" or "Monitor my fish tank"
-
-Your AI assistant will:
-1. Install everything automatically
-2. Find your camera
-3. Send you a test snapshot to confirm
-4. Start monitoring
-
-All via Telegram chat. No terminal needed.
-
----
-
-### Option B: Manual Setup (2 minutes)
-
-```bash
-# 1. Clone & Install
-git clone https://github.com/oh-ashen-one/fish-watcher.git
-cd fish-watcher
-pip install -r requirements.txt
-
-# 2. Test Camera
-python test_camera.py
-
-# 3. Run
-python run.py
-```
-
-That's it. It's now watching your tank 24/7.
-
----
-
-## Camera Options
-
-### USB Webcam (Easiest)
-Just plug it in. Device is usually `0` or `1`.
-
+**USB Webcam** (easiest):
 ```yaml
 camera:
   type: "usb"
   device: 0
 ```
 
-### Phone as Webcam
-Install DroidCam, Iriun, or IP Webcam on your phone:
-
+**Phone as Webcam** (DroidCam, IP Webcam):
 ```yaml
 camera:
   type: "ip"
-  url: "http://192.168.1.100:4747/video"  # DroidCam
-  # url: "http://192.168.1.100:8080/video"  # IP Webcam
+  url: "http://192.168.1.100:4747/video"
 ```
 
-### IP Camera / RTSP
+**IP Camera / RTSP**:
 ```yaml
 camera:
   type: "rtsp"
@@ -150,88 +111,21 @@ camera:
 
 ---
 
-## How It Works
+## ⚙️ How It Works
 
 ```
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│   Camera    │────▶│ Rolling      │────▶│  Detectors  │
-│   Feed      │     │ Buffer (10s) │     │  (6 types)  │
-└─────────────┘     └──────────────┘     └──────┬──────┘
-                                                │
-                              Alert triggered?  │
-                                                ▼
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│  You get    │◀────│  Clawdbot    │◀────│ Save Clip   │
-│  notified   │     │  analyzes    │     │ (40 sec)    │
-└─────────────┘     └──────────────┘     └─────────────┘
+Camera → Rolling Buffer (10s) → Detectors → Alert?
+                                              ↓
+         You ← Clawdbot ← Vision Analysis ← Save Clip
 ```
 
-**The magic:** The rolling buffer keeps the last 10 seconds always. So when something triggers, you get footage from BEFORE it happened.
+The rolling buffer keeps the last 10 seconds always — so when something triggers, you get footage from *before* it happened.
+
+**Clips:** 40 seconds total (10s pre + 30s post), saved to `./clips/`
 
 ---
 
-## Clips
-
-Saved to `./clips/` with format:
-```
-20260129_183045_no_motion.mp4
-20260129_194522_feeding_frenzy.mp4
-```
-
-Each clip is 40 seconds: 10 sec before trigger + 30 sec after.
-
----
-
-## Configuration
-
-All settings in `config.yaml`:
-
-| Setting | What It Does | Default |
-|---------|--------------|---------|
-| `recording.pre_roll` | Seconds before trigger | 10 |
-| `recording.post_roll` | Seconds after trigger | 30 |
-| `detection.motion_sensitivity` | 0-100, higher = more sensitive | 50 |
-| `detection.no_motion_threshold` | Seconds before "no motion" alert | 300 (5 min) |
-| `alerts.cooldown` | Min seconds between same alert | 60 |
-| `alerts.clip_cool_moments` | Also clip good moments, not just problems | true |
-
----
-
-## Telegram Commands
-
-Once set up with Clawdbot, just chat naturally:
-
-| You Say | What Happens |
-|---------|--------------|
-| "Set up fish watcher" | Guided setup wizard |
-| "How are my fish?" | Current tank status |
-| "Show me the tank" | Live snapshot |
-| "Fish report" | Today's health summary |
-| "Start/stop fish watcher" | Control monitoring |
-| "Make it more sensitive" | Adjust detection |
-| "Name my fish Gerald and Nemo" | Personalize alerts |
-| "Show recent clips" | Get alert videos |
-
----
-
-## Clawdbot Integration
-
-Fish Watcher writes alerts to `~/clawd/fish-watcher-pending-alert.json`.
-
-Your Clawdbot can:
-1. Pick up alerts during heartbeats
-2. Analyze the clip with vision
-3. Send you a message with the video + commentary
-
-Example alert you'd receive:
-> 🚨 **Fish Tank Alert**
-> Gerald hasn't moved in 8 minutes. Could be sleeping, but worth a check. Here's the clip.
-
----
-
-## Name Your Fish (Optional)
-
-Edit `config.yaml`:
+## 🐠 Personalize Your Fish
 
 ```yaml
 fish:
@@ -245,36 +139,39 @@ fish:
       color: "orange"
 ```
 
-This enables personalized alerts like "Gerald is acting weird" instead of "Fish #1 alert".
+Get alerts like "Gerald hasn't moved" instead of "Fish #1 alert".
 
 ---
 
-## Daily Reports
-
-Get a daily summary at 8 PM:
+## 📊 Daily Reports
 
 ```
 📊 Daily Fish Report - 2026-01-29
 
 🏥 Health Score: 92/100
-
-📈 Activity:
-  • Average: 45.2
-  • Peak: 2:30 PM (feeding time)
-  
+📈 Peak Activity: 2:30 PM (feeding time)
 🚨 Alerts: 2
-  📝 motion_spike: 1
-  📝 interesting_moment: 1
-
 📹 Clips: 2
-✨ Cool moments: 1
 
 🐟 Your fish are thriving!
 ```
 
 ---
 
-## Commands
+## 🤖 Clawdbot Integration
+
+Works seamlessly with [Clawdbot](https://github.com/clawdbot/clawdbot). Just say:
+
+- "Set up fish watcher" — guided setup
+- "How are my fish?" — current status
+- "Show me the tank" — live snapshot
+- "Fish report" — today's health summary
+
+Fish Watcher writes alerts to `~/clawd/fish-watcher-pending-alert.json` for Clawdbot to pick up.
+
+---
+
+## 📋 Commands
 
 | Command | Description |
 |---------|-------------|
@@ -285,80 +182,62 @@ Get a daily summary at 8 PM:
 
 ---
 
-## Requirements
+## 📁 Project Structure
+
+```
+fish-watcher/
+├── run.py              # Main entry point
+├── dashboard.py        # Web dashboard (Flask)
+├── stream.py           # Live stream server
+├── test_camera.py      # Camera test utility
+├── config.yaml         # All settings
+├── src/
+│   ├── watcher.py      # Main watcher loop
+│   ├── detector.py     # Alert detection algorithms
+│   ├── buffer.py       # Rolling frame buffer
+│   ├── recorder.py     # Clip recording
+│   ├── notifier.py     # Clawdbot/webhook notifications
+│   ├── vision.py       # Claude vision analysis
+│   └── reports.py      # Health reports
+└── clawdbot/
+    ├── SKILL.md        # Clawdbot skill definition
+    ├── controller.py   # Clawdbot control interface
+    └── setup_wizard.py # Interactive setup
+```
+
+---
+
+## ⚙️ Configuration Reference
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `recording.pre_roll` | 10 | Seconds before trigger |
+| `recording.post_roll` | 30 | Seconds after trigger |
+| `detection.motion_sensitivity` | 50 | 0-100, higher = more sensitive |
+| `detection.no_motion_threshold` | 300 | Seconds before "no motion" alert |
+| `alerts.cooldown` | 60 | Min seconds between same alert |
+| `vision.enabled` | true | Use Claude for clip analysis |
+
+See `config.yaml` for all options.
+
+---
+
+## 📋 Requirements
 
 - Python 3.10+
-- USB webcam, IP camera, or phone with webcam app
-- ~100MB disk space per day of clips
+- OpenCV, NumPy, Flask, PyYAML
+- Camera (USB, IP, or phone)
+- ~100MB disk/day for clips
+- (Optional) Anthropic API key for vision
 
 ---
 
-## License
+## 📜 License
 
-MIT - do whatever you want with it.
-
----
-
-## 🖥️ Web Dashboard
-
-Fish Watcher includes a beautiful web dashboard for monitoring your tank from any browser.
-
-### Start the Dashboard
-
-```bash
-# Install dashboard dependencies
-pip install -r requirements.txt
-
-# Run the dashboard
-python dashboard.py
-
-# Or with custom options
-python dashboard.py --port 8080 --host 0.0.0.0  # LAN access
-```
-
-Dashboard will be available at: **http://localhost:8080**
-
-### Dashboard Features
-
-| Page | What It Shows |
-|------|---------------|
-| **Dashboard** | Health score, recent alerts, live preview, clips |
-| **Live Stream** | Full-screen live feed from your tank |
-| **Clips** | Browse, play, and download recorded clips |
-| **Reports** | Daily/weekly health reports with charts |
-| **Settings** | Current configuration view |
-
-### API Endpoints
-
-The dashboard also provides a REST API:
-
-```
-GET /api/status       - Current status and health score
-GET /api/clips        - List all clips
-GET /api/clips/{file} - Download a specific clip
-GET /api/alerts       - Alert history
-GET /api/reports/daily  - Today's report
-GET /api/reports/weekly - Weekly report
-GET /api/stats        - Historical statistics
-GET /api/config       - Current configuration
-```
-
-### Screenshots
-
-Dashboard home:
-```
-┌─────────────────────────────────────────────────┐
-│  🐟 Fish Watcher                                │
-├─────────────────────────────────────────────────┤
-│  Health: 92/100  │  Alerts: 2  │  Clips: 5     │
-├─────────────────────────────────────────────────┤
-│  📺 Live Preview          │  🚨 Recent Alerts  │
-│  ┌─────────────────────┐  │  ⚠️ no_motion     │
-│  │    [Live Feed]      │  │  ✨ feeding_frenzy │
-│  └─────────────────────┘  │                    │
-└─────────────────────────────────────────────────┘
-```
+MIT — do whatever you want with it.
 
 ---
 
-Built with 🐟 by [@ashen_one](https://twitter.com/ashen_one)
+<p align="center">
+Built with 🐟 by <a href="https://twitter.com/ashen_one">@ashen_one</a>
+</p>
