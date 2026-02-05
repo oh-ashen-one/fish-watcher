@@ -6,11 +6,14 @@ import os
 import json
 import subprocess
 from pathlib import Path
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from dataclasses import dataclass
 
 from .detector import Alert, AlertType
-from .vision import ClaudeVisionAnalyzer, analyze_for_clawdbot
+
+# Lazy import to avoid circular dependency
+if TYPE_CHECKING:
+    from .vision import ClaudeVisionAnalyzer
 
 
 @dataclass
@@ -78,7 +81,13 @@ class ClawdbotNotifier:
         self.workspace_dir = Path(workspace_dir) if workspace_dir else Path.home() / "clawd"
         self.alert_log = self.workspace_dir / "fish-watcher-alerts.json"
         self.enable_vision = enable_vision
-        self.vision_analyzer = ClaudeVisionAnalyzer() if enable_vision else None
+        self.vision_analyzer = None
+        if enable_vision:
+            try:
+                from .vision import ClaudeVisionAnalyzer
+                self.vision_analyzer = ClaudeVisionAnalyzer()
+            except ImportError:
+                self.enable_vision = False
         
     def notify(self, alert: Alert, clip_path: Optional[str] = None) -> NotificationResult:
         """Send an alert notification."""
@@ -105,6 +114,7 @@ class ClawdbotNotifier:
         if self.enable_vision and clip_path and Path(clip_path).exists():
             print(f"[Notifier] Running Claude vision analysis on {clip_path}...")
             try:
+                from .vision import analyze_for_clawdbot
                 vision_analysis = analyze_for_clawdbot(clip_path)
                 if vision_analysis and "error" not in vision_analysis:
                     print(f"[Notifier] Vision analysis: {vision_analysis.get('summary', 'N/A')}")

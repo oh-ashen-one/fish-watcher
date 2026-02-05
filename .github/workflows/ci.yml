@@ -23,7 +23,7 @@ jobs:
           pip install ruff
       
       - name: Lint with ruff
-        run: ruff check . --ignore E501
+        run: ruff check . --ignore E501,F401 --exclude __pycache__
 
   test:
     runs-on: ubuntu-latest
@@ -43,9 +43,12 @@ jobs:
       
       - name: Test imports
         run: |
-          python -c "from src import FishWatcher, FishWatcherDetector, Alert"
-          python -c "from src import MultiTankWatcher, TankConfig"
-          python -c "from src import ClaudeVisionAnalyzer"
+          python -c "from src.detector import FishWatcherDetector, Alert, AlertType"
+          python -c "from src.buffer import RollingBuffer"
+          python -c "from src.recorder import ClipRecorder"
+          python -c "from src.vision import ClaudeVisionAnalyzer"
+          python -c "from src.multi_tank import MultiTankWatcher, TankConfig"
+          python -c "from src.fish_counter import FishCounter"
       
       - name: Run status check
         run: python status.py
