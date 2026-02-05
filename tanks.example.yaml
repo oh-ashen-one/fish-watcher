@@ -1,0 +1,61 @@
+# Multi-Tank Configuration Example
+# Copy to tanks.yaml and customize
+
+tanks:
+  # Tank 1 - Living Room (USB webcam)
+  - id: "living_room"
+    name: "Living Room Tank"
+    camera:
+      type: "usb"
+      device: 0
+      width: 640
+      height: 480
+      fps: 15
+    detection:
+      motion_sensitivity: 50
+      no_motion_threshold: 300
+    fish:
+      count: 5
+      profiles:
+        - name: "Gerald"
+          species: "Betta"
+          color: "blue"
+        - name: "Nemo"
+          species: "Clownfish"
+          color: "orange"
+    # Optional: custom output dirs
+    # clips_dir: "./clips/living_room"
+    # data_dir: "./data/living_room"
+  
+  # Tank 2 - Office (IP camera)
+  - id: "office"
+    name: "Office Tank"
+    camera:
+      type: "ip"
+      url: "http://192.168.1.100:4747/video"
+      width: 640
+      height: 480
+      fps: 15
+    detection:
+      motion_sensitivity: 60
+      no_motion_threshold: 300
+    fish:
+      count: 3
+  
+  # Tank 3 - Bedroom (RTSP camera)
+  - id: "bedroom"
+    name: "Bedroom Tank"
+    camera:
+      type: "rtsp"
+      url: "rtsp://192.168.1.101:554/stream"
+      width: 1280
+      height: 720
+      fps: 10
+    detection:
+      motion_sensitivity: 40
+      no_motion_threshold: 600  # 10 minutes (fish sleep more here)
+    fish:
+      count: 2
+
+# Usage:
+#   python -m src.multi_tank -c tanks.yaml

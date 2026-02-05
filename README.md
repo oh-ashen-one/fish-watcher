@@ -49,10 +49,11 @@ That's it. Now watching your tank 24/7.
 ## 🖥️ Web Dashboard
 
 ```bash
-python dashboard.py
+python run_dashboard.py
+# Or: python run_dashboard.py --port 8080 --host 0.0.0.0
 ```
 
-Opens at `http://localhost:5555/?p=<password>`
+Opens at `http://localhost:8080`
 
 | Page | Features |
 |------|----------|
@@ -175,10 +176,53 @@ Fish Watcher writes alerts to `~/clawd/fish-watcher-pending-alert.json` for Claw
 
 | Command | Description |
 |---------|-------------|
-| `python run.py` | Start 24/7 monitoring |
-| `python dashboard.py` | Launch web dashboard |
+| `python run.py` | Start 24/7 monitoring (single tank) |
+| `python run_multi.py` | Multi-tank mode (monitor multiple tanks) |
+| `python run_dashboard.py` | Launch web dashboard |
 | `python stream.py` | Live stream only |
 | `python test_camera.py` | Test camera connection |
+| `python status.py` | Quick health check |
+
+---
+
+## 🐠 Multi-Tank Support
+
+Monitor multiple tanks from one instance:
+
+```bash
+# Copy example config
+cp tanks.example.yaml tanks.yaml
+
+# Edit with your tank details
+# Then run:
+python run_multi.py
+```
+
+**tanks.yaml:**
+```yaml
+tanks:
+  - id: "living_room"
+    name: "Living Room Tank"
+    camera:
+      type: "usb"
+      device: 0
+    fish:
+      count: 5
+  
+  - id: "office"
+    name: "Office Tank"
+    camera:
+      type: "ip"
+      url: "http://192.168.1.100:4747/video"
+    fish:
+      count: 3
+```
+
+Each tank gets its own:
+- Detection settings
+- Clips folder (`./clips/<tank_id>/`)
+- Data/reports (`./data/<tank_id>/`)
+- Fish profiles
 
 ---
 
@@ -186,12 +230,12 @@ Fish Watcher writes alerts to `~/clawd/fish-watcher-pending-alert.json` for Claw
 
 ```
 fish-watcher/
-├── run.py              # Main entry point
-├── dashboard.py        # Web dashboard (Flask)
+├── run.py              # Main watcher entry point
+├── run_dashboard.py    # Web dashboard entry point
 ├── stream.py           # Live stream server
 ├── test_camera.py      # Camera test utility
 ├── config.yaml         # All settings
-├── src/
+├── src/                # Core modules
 │   ├── watcher.py      # Main watcher loop
 │   ├── detector.py     # Alert detection algorithms
 │   ├── buffer.py       # Rolling frame buffer
@@ -199,6 +243,9 @@ fish-watcher/
 │   ├── notifier.py     # Clawdbot/webhook notifications
 │   ├── vision.py       # Claude vision analysis
 │   └── reports.py      # Health reports
+├── dashboard/          # Web dashboard (FastAPI)
+│   ├── app.py          # Dashboard application
+│   └── templates/      # HTML templates
 └── clawdbot/
     ├── SKILL.md        # Clawdbot skill definition
     ├── controller.py   # Clawdbot control interface

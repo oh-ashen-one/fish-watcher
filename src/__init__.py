@@ -9,8 +9,9 @@ from .recorder import ClipRecorder
 from .notifier import ClawdbotNotifier
 from .reports import ReportGenerator
 from .vision import ClaudeVisionAnalyzer, analyze_for_clawdbot
+from .multi_tank import MultiTankWatcher, TankWatcher, TankConfig
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 __all__ = [
     "FishWatcher",
     "FishWatcherDetector", 
@@ -22,4 +23,7 @@ __all__ = [
     "ReportGenerator",
     "ClaudeVisionAnalyzer",
     "analyze_for_clawdbot",
+    "MultiTankWatcher",
+    "TankWatcher",
+    "TankConfig",
 ]

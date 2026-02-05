@@ -2,6 +2,20 @@
 
 All notable changes to Fish Watcher will be documented here.
 
+## [1.2.0] - 2026-02-05
+
+### Added
+- **Multi-Tank Support** (`run_multi.py`) — Monitor multiple tanks simultaneously
+  - Each tank runs in its own thread
+  - Separate clips/data directories per tank
+  - Independent detection settings
+  - Example config: `tanks.example.yaml`
+- `TankConfig`, `TankWatcher`, `MultiTankWatcher` classes
+
+### Changed
+- Bumped version to 1.2.0
+- Updated README with multi-tank documentation
+
 ## [1.1.0] - 2026-02-05
 
 ### Added
