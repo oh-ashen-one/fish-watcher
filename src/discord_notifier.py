@@ -229,7 +229,7 @@ class DiscordNotifier:
             health_msg = "Not enough data yet"
         
         embed = {
-            "title": f"📊 Daily Fish Report",
+            "title": "📊 Daily Fish Report",
             "description": f"{health_emoji} {health_msg}",
             "color": 0x00D4FF,
             "fields": [

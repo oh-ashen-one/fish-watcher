@@ -140,7 +140,7 @@ class MotionDetector:
             if recent_avg < self.baseline_motion * 0.3:
                 alerts.append(Alert(
                     type=AlertType.LOW_ACTIVITY,
-                    message=f"Activity levels significantly below normal",
+                    message="Activity levels significantly below normal",
                     confidence=0.6,
                     frame=frame
                 ))
@@ -213,7 +213,7 @@ class ColorDetector:
             if 40 < recent_green < 80 and green_shift > 10:
                 alerts.append(Alert(
                     type=AlertType.ALGAE_GROWTH,
-                    message=f"Possible algae growth - green tint increasing",
+                    message="Possible algae growth - green tint increasing",
                     confidence=min(green_shift / 20, 1.0),
                     frame=frame
                 ))

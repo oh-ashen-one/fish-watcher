@@ -95,7 +95,7 @@ def main():
     # Config check
     ok, result = check_config()
     if ok:
-        print(f"✅ Config: OK")
+        print("✅ Config: OK")
         config = result
     else:
         print(f"❌ Config: {result}")
@@ -124,7 +124,7 @@ def main():
         alerts = data.get("alert_count", 0)
         print(f"📊 Today: Health {health}/100, {alerts} alerts")
     else:
-        print(f"📊 Today: No data yet")
+        print("📊 Today: No data yet")
     
     # Dependencies
     print("\n📦 Dependencies:")
@@ -134,19 +134,19 @@ def main():
         import numpy
         print(f"   numpy: ✅ ({numpy.__version__})")
     except:
-        print(f"   numpy: ❌")
+        print("   numpy: ❌")
     
     try:
         import flask
         print(f"   flask: ✅ ({flask.__version__})")
     except:
-        print(f"   flask: ❌")
+        print("   flask: ❌")
     
     try:
         import anthropic
-        print(f"   anthropic: ✅")
+        print("   anthropic: ✅")
     except:
-        print(f"   anthropic: ⚠️ (optional, for vision)")
+        print("   anthropic: ⚠️ (optional, for vision)")
     
     print("\n" + "=" * 40)
     print("Run 'python run.py' to start monitoring")

@@ -182,7 +182,7 @@ class ReportGenerator:
             "",
             f"🏥 **Health Score:** {health_score}/100",
             "",
-            f"📈 **Activity:**",
+            "📈 **Activity:**",
             f"  • Average: {avg_activity:.1f}",
             f"  • Samples: {len(self.activity_samples)}",
             "",
@@ -235,17 +235,17 @@ class ReportGenerator:
         trend = "📈 improving" if health_scores[-1] > health_scores[0] else "📉 declining" if health_scores[-1] < health_scores[0] else "➡️ stable"
         
         lines = [
-            f"📊 **Weekly Fish Report**",
+            "📊 **Weekly Fish Report**",
             f"📅 {dates[0]} to {dates[-1]}",
             "",
             f"🏥 **Avg Health Score:** {avg_health:.0f}/100 ({trend})",
             "",
-            f"📈 **This Week:**",
+            "📈 **This Week:**",
             f"  • Total alerts: {total_alerts}",
             f"  • Clips recorded: {total_clips}",
             f"  • Cool moments: {total_cool}",
             "",
-            f"📅 **Daily Health Scores:**",
+            "📅 **Daily Health Scores:**",
         ]
         
         for d in dates:

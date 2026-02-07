@@ -180,7 +180,7 @@ def step_name_fish(count: int, current: int = 1, profiles: list = None):
             "step": "fish_profiles",
             "status": "complete",
             "profiles": profiles,
-            "message": f"🐟 **Got it!** I'll remember:\n\n" + "\n".join([f"• **{p['name']}** - {p['description']}" for p in profiles]),
+            "message": "🐟 **Got it!** I'll remember:\n\n" + "\n".join([f"• **{p['name']}** - {p['description']}" for p in profiles]),
             "next": "start"
         }
     

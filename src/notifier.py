@@ -97,14 +97,14 @@ class ClawdbotNotifier:
         # Build the message
         message_parts = [
             f"{emoji} **Fish Tank Alert**",
-            f"",
+            "",
             f"**Type:** {alert.type.value.replace('_', ' ').title()}",
             f"**Message:** {alert.message}",
             f"**Confidence:** {alert.confidence:.0%}",
         ]
         
         if clip_path and Path(clip_path).exists():
-            message_parts.append(f"")
+            message_parts.append("")
             message_parts.append(f"📹 Clip saved: `{clip_path}`")
         
         message = "\n".join(message_parts)
