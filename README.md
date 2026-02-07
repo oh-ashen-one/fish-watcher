@@ -24,6 +24,10 @@
 | 🧠 **AI Analysis** | Claude vision analyzes clips for intelligent insights |
 | 🖥️ **Web Dashboard** | View status, clips, and live stream from any browser |
 | 📊 **Reports** | Daily health scores and weekly trends |
+| 😌 **Tank Mood** | Fun personality indicator — is your tank "vibin" or "stressed"? |
+| 🎬 **Highlight Reels** | Auto-compile best clips into shareable weekly videos |
+| 📱 **Social Sharing** | Auto-generate GIFs for Twitter/TikTok/Instagram |
+| 💬 **Discord/Telegram** | Direct alerts to your chat — no middleman needed |
 
 ---
 
@@ -184,6 +188,9 @@ Fish Watcher writes alerts to `~/clawd/fish-watcher-pending-alert.json` for Claw
 | `python stream.py` | Live stream only |
 | `python test_camera.py` | Test camera connection |
 | `python status.py` | Quick health check |
+| `python -m src.tank_mood` | Check tank mood/vibe |
+| `python -m src.highlights` | Generate highlight reel |
+| `python -m src.highlights --gif clips/video.mp4` | Make a GIF from clip |
 
 ---
 
@@ -246,12 +253,123 @@ The compose file includes:
 
 ---
 
+## 😌 Tank Mood
+
+Your tank has a personality. Check its vibe:
+
+```bash
+python -m src.tank_mood
+```
+
+```
+╔══════════════════════════════╗
+║   🎉 TANK MOOD: PLAYFUL      ║
+╠══════════════════════════════╣
+║ Lots of activity! Happy fish ║
+║                              ║
+║ Activity: active             ║
+║ Health:   thriving           ║
+║                              ║
+║ Peak time: 2 PM              ║
+║ Peak day:  Saturday          ║
+╚══════════════════════════════╝
+```
+
+**Possible moods:** zen, peaceful, vibin, playful, zoomies, hangry, shy, social, restless, stressed, lethargic, needs attention
+
+**Activity heatmap:**
+```bash
+python -m src.tank_mood --heatmap
+```
+
+Shows when your fish are most active throughout the week.
+
+---
+
+## 🎬 Highlight Reels
+
+Auto-compile your best clips into shareable videos:
+
+```bash
+# Generate weekly highlights
+python -m src.highlights
+
+# See stats only
+python -m src.highlights --stats-only
+
+# Generate a GIF from any clip (perfect for Twitter/TikTok)
+python -m src.highlights --gif clips/20260129_143022_feeding_frenzy.mp4
+```
+
+The highlight reel:
+- Scores clips by how interesting they are (feeding frenzy > motion spike > clustering)
+- Picks the top 10 clips from the last 7 days
+- Compiles them in chronological order
+- Adds timestamp overlays
+
+**Auto-weekly:** Enable in config and it'll generate every Sunday.
+
+---
+
+## 💬 Discord & Telegram Alerts
+
+Get alerts directly in your chat — no Clawdbot middleman needed.
+
+### Discord Webhook
+
+1. Server Settings → Integrations → Webhooks → New Webhook
+2. Copy the webhook URL
+3. Add to `config.yaml`:
+
+```yaml
+notification:
+  discord:
+    enabled: true
+    webhook_url: "https://discord.com/api/webhooks/..."
+    tank_name: "Gerald's Tank"
+```
+
+### Telegram Bot
+
+1. Message @BotFather → /newbot → get token
+2. Message @userinfobot → get your chat ID
+3. Add to `config.yaml`:
+
+```yaml
+notification:
+  telegram:
+    enabled: true
+    bot_token: "123456:ABC-DEF..."
+    chat_id: "123456789"
+    tank_name: "Gerald's Tank"
+```
+
+Alerts include AI analysis, clip info, and fun personality messages.
+
+---
+
+## 📱 Social Sharing
+
+Generate GIFs from any clip for easy sharing:
+
+```bash
+python -m src.highlights --gif clips/feeding_frenzy.mp4
+```
+
+Options:
+- Default: 5 seconds, 480px wide, 15fps
+- Output saved to `./highlights/`
+
+Perfect for Twitter, TikTok, Instagram stories.
+
+---
+
 ## 📁 Project Structure
 
 ```
 fish-watcher/
 ├── run.py              # Main watcher entry point
-├── run_dashboard.py    # Web dashboard entry point
+├── dashboard.py        # Web dashboard
 ├── stream.py           # Live stream server
 ├── test_camera.py      # Camera test utility
 ├── config.yaml         # All settings
@@ -262,10 +380,11 @@ fish-watcher/
 │   ├── recorder.py     # Clip recording
 │   ├── notifier.py     # Clawdbot/webhook notifications
 │   ├── vision.py       # Claude vision analysis
-│   └── reports.py      # Health reports
-├── dashboard/          # Web dashboard (FastAPI)
-│   ├── app.py          # Dashboard application
-│   └── templates/      # HTML templates
+│   ├── reports.py      # Health reports
+│   ├── tank_mood.py    # Tank personality/vibe 🆕
+│   ├── highlights.py   # Highlight reel generator 🆕
+│   ├── discord_notifier.py   # Discord webhooks 🆕
+│   └── telegram_notifier.py  # Telegram bot alerts 🆕
 └── clawdbot/
     ├── SKILL.md        # Clawdbot skill definition
     ├── controller.py   # Clawdbot control interface

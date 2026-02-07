@@ -83,14 +83,48 @@ reports:
   data_dir: "./data"
 
 notification:
-  # How to notify
+  # How to notify: clawdbot, discord, telegram, webhook, or all
   method: "clawdbot"
-  # Alternative: webhook
-  # method: "webhook"
-  # webhook_url: "https://your-webhook.com/fish-alert"
   
   # Workspace for Clawdbot integration
   workspace_dir: "~/clawd"
+  
+  # Discord webhook (get from Server Settings > Integrations > Webhooks)
+  discord:
+    enabled: false
+    webhook_url: ""  # https://discord.com/api/webhooks/...
+    tank_name: "Fish Tank"
+  
+  # Telegram bot notifications
+  telegram:
+    enabled: false
+    bot_token: ""    # From @BotFather
+    chat_id: ""      # Your chat/group ID
+    tank_name: "Fish Tank"
+  
+  # Generic webhook
+  webhook:
+    enabled: false
+    url: ""
+
+# === Highlights Reel ===
+highlights:
+  enabled: true
+  # Auto-generate weekly highlight reel
+  weekly_reel: true
+  weekly_day: "sunday"
+  # Max clips per reel
+  max_clips: 10
+  # Output directory
+  output_dir: "./highlights"
+  # Generate GIFs for social sharing
+  auto_gif: true
+
+# === Tank Mood ===
+mood:
+  enabled: true
+  # Include mood in daily reports
+  include_in_reports: true
 
 # === Vision Analysis (Claude) ===
 vision:
