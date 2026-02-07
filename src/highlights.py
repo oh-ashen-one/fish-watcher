@@ -282,7 +282,7 @@ def main():
     
     if args.stats_only:
         stats = gen.get_weekly_stats(days=args.days)
-        print(f"\n📊 Weekly Stats ({stats['period_days']} days)")
+        print(f"\n[STATS] Weekly Stats ({stats['period_days']} days)")
         print(f"   Total clips: {stats['total_clips']}")
         print(f"   Cool moments: {stats['cool_moments']}")
         print(f"   Alerts: {stats['alerts']}")

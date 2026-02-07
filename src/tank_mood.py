@@ -250,30 +250,45 @@ class TankMoodAnalyzer:
         }
 
 
-def get_mood_card() -> str:
+def get_mood_card(use_ascii: bool = False) -> str:
     """Generate a text-based mood card for display."""
     analyzer = TankMoodAnalyzer()
     mood = analyzer.analyze_mood()
     favorites = analyzer.get_fish_favorites()
     
+    # Use ASCII borders for Windows compatibility
+    if use_ascii:
+        top = "+------------------------------+"
+        mid = "+------------------------------+"
+        bot = "+------------------------------+"
+        side = "|"
+        # Strip emoji for Windows terminal
+        emoji_display = "[" + mood.mood[0].upper() + "]"
+    else:
+        top = "╔══════════════════════════════╗"
+        mid = "╠══════════════════════════════╣"
+        bot = "╚══════════════════════════════╝"
+        side = "║"
+        emoji_display = mood.emoji
+    
     lines = [
-        f"╔══════════════════════════════╗",
-        f"║   {mood.emoji} TANK MOOD: {mood.mood.upper():12} ║",
-        f"╠══════════════════════════════╣",
-        f"║ {mood.description:28} ║",
-        f"║                              ║",
-        f"║ Activity: {mood.activity_level:18} ║",
-        f"║ Health:   {mood.health_vibe:18} ║",
+        top,
+        f"{side}  {emoji_display} TANK MOOD: {mood.mood.upper():12} {side}",
+        mid,
+        f"{side} {mood.description:28} {side}",
+        f"{side}                              {side}",
+        f"{side} Activity: {mood.activity_level:18} {side}",
+        f"{side} Health:   {mood.health_vibe:18} {side}",
     ]
     
     if not favorites.get("no_data"):
         lines.extend([
-            f"║                              ║",
-            f"║ Peak time: {favorites['peak_time']:16} ║",
-            f"║ Peak day:  {favorites['peak_day']:16} ║",
+            f"{side}                              {side}",
+            f"{side} Peak time: {favorites['peak_time']:16} {side}",
+            f"{side} Peak day:  {favorites['peak_day']:16} {side}",
         ])
     
-    lines.append(f"╚══════════════════════════════╝")
+    lines.append(bot)
     
     return "\n".join(lines)
 
@@ -281,17 +296,23 @@ def get_mood_card() -> str:
 def main():
     """CLI for tank mood."""
     import argparse
+    import sys
+    import platform
     
     parser = argparse.ArgumentParser(description="Check your tank's mood")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     parser.add_argument("--heatmap", action="store_true", help="Show activity heatmap")
+    parser.add_argument("--ascii", action="store_true", help="Use ASCII borders (Windows compatible)")
     
     args = parser.parse_args()
     analyzer = TankMoodAnalyzer()
     
+    # Auto-detect Windows for ASCII mode
+    use_ascii = args.ascii or platform.system() == "Windows"
+    
     if args.heatmap:
         heatmap = analyzer.get_activity_heatmap()
-        print("\n📊 Activity Heatmap (clips per hour)")
+        print("\n Activity Heatmap (clips per hour)")
         days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         print("     " + " ".join(f"{h:2}" for h in range(0, 24, 2)))
         for day in days:
@@ -299,30 +320,31 @@ def main():
             for h in range(0, 24, 2):
                 count = heatmap.get(day, {}).get(h, 0) + heatmap.get(day, {}).get(h+1, 0)
                 if count == 0:
-                    row.append(" ·")
+                    row.append(" .")
                 elif count < 3:
-                    row.append(" ░")
+                    row.append(" o")
                 elif count < 5:
-                    row.append(" ▒")
+                    row.append(" O")
                 else:
-                    row.append(" █")
+                    row.append(" #")
             print(f"{day}: {''.join(row)}")
         return
     
     if args.json:
         mood = analyzer.analyze_mood()
         favorites = analyzer.get_fish_favorites()
+        # Use ensure_ascii=True on Windows to avoid encoding issues
         print(json.dumps({
             "mood": mood.mood,
-            "emoji": mood.emoji,
+            "emoji": mood.emoji if not use_ascii else f"[{mood.mood[0].upper()}]",
             "description": mood.description,
             "activity_level": mood.activity_level,
             "health_vibe": mood.health_vibe,
             "favorites": favorites,
-        }, indent=2))
+        }, indent=2, ensure_ascii=use_ascii))
         return
     
-    print(get_mood_card())
+    print(get_mood_card(use_ascii=use_ascii))
 
 
 if __name__ == "__main__":
