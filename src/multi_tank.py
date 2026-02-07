@@ -278,7 +278,7 @@ class MultiTankWatcher:
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
         
-        print(f"[MultiTank] All tanks started. Press Ctrl+C to stop.")
+        print("[MultiTank] All tanks started. Press Ctrl+C to stop.")
         
         # Keep main thread alive
         try:

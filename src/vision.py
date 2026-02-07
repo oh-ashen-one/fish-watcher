@@ -264,19 +264,19 @@ if __name__ == "__main__":
         result = analyzer.analyze_image_path(path)
     
     if result:
-        print(f"\n📊 Analysis Results:")
+        print("\n📊 Analysis Results:")
         print(f"   Summary: {result.summary}")
         print(f"   Severity: {result.severity}")
         if result.health_concerns:
-            print(f"   ⚠️ Health concerns:")
+            print("   ⚠️ Health concerns:")
             for c in result.health_concerns:
                 print(f"      - {c}")
         if result.observations:
-            print(f"   👁️ Observations:")
+            print("   👁️ Observations:")
             for o in result.observations:
                 print(f"      - {o}")
         if result.recommendations:
-            print(f"   💡 Recommendations:")
+            print("   💡 Recommendations:")
             for r in result.recommendations:
                 print(f"      - {r}")
     else:

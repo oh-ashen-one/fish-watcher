@@ -110,7 +110,8 @@ def live_page():
 @app.route('/stream')
 @require_password
 def stream():
-    import cv2, time
+    import cv2
+    import time
     cam = config.get("camera", {})
     dev, fps, q = cam.get("device", 0), stream_config.get("fps", 30), stream_config.get("quality", 85)
     def gen():

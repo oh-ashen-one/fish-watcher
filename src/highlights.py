@@ -287,7 +287,7 @@ def main():
         print(f"   Cool moments: {stats['cool_moments']}")
         print(f"   Alerts: {stats['alerts']}")
         print(f"   Most active day: {stats['most_active_day']}")
-        print(f"\n   By type:")
+        print("\n   By type:")
         for t, c in sorted(stats['by_type'].items(), key=lambda x: -x[1]):
             print(f"      {t.replace('_', ' ').title()}: {c}")
         return

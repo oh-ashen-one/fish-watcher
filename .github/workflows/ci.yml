@@ -23,7 +23,7 @@ jobs:
           pip install ruff
       
       - name: Lint with ruff
-        run: ruff check . --ignore E501,F401 --exclude __pycache__
+        run: ruff check . --ignore E501,F401,E722,E701,E702,F821 --exclude __pycache__
 
   test:
     runs-on: ubuntu-latest

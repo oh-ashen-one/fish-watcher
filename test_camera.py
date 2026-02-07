@@ -100,7 +100,7 @@ def main():
         print()
         print("=" * 50)
         print("Camera is ready! You can now run:")
-        print(f"  python run.py")
+        print("  python run.py")
         print()
         print("Or if you need a different camera, edit config.yaml:")
         print(f"  device: {device}")

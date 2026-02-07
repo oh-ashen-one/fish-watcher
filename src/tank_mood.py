@@ -257,23 +257,23 @@ def get_mood_card() -> str:
     favorites = analyzer.get_fish_favorites()
     
     lines = [
-        f"╔══════════════════════════════╗",
+        "╔══════════════════════════════╗",
         f"║   {mood.emoji} TANK MOOD: {mood.mood.upper():12} ║",
-        f"╠══════════════════════════════╣",
+        "╠══════════════════════════════╣",
         f"║ {mood.description:28} ║",
-        f"║                              ║",
+        "║                              ║",
         f"║ Activity: {mood.activity_level:18} ║",
         f"║ Health:   {mood.health_vibe:18} ║",
     ]
     
     if not favorites.get("no_data"):
         lines.extend([
-            f"║                              ║",
+            "║                              ║",
             f"║ Peak time: {favorites['peak_time']:16} ║",
             f"║ Peak day:  {favorites['peak_day']:16} ║",
         ])
     
-    lines.append(f"╚══════════════════════════════╝")
+    lines.append("╚══════════════════════════════╝")
     
     return "\n".join(lines)
 
