@@ -296,7 +296,7 @@ def get_mood_card(use_ascii: bool = False) -> str:
     return "\n".join(lines)
 
 
-def main():
+def main() -> None:
     """CLI for tank mood."""
     import argparse
     import sys

@@ -77,7 +77,7 @@ class HighlightsGenerator:
         
         return clips
     
-    def select_highlights(self, clips: list[ClipInfo], 
+    def select_highlights(self, clips: list[ClipInfo],
                          max_clips: int = 10,
                          max_duration: int = 60) -> list[ClipInfo]:
         """Select the best clips for the highlight reel."""
@@ -92,12 +92,15 @@ class HighlightsGenerator:
         
         return selected
     
-    def generate_reel(self, clips: Optional[list[ClipInfo]] = None,
-                      days: int = 7,
-                      max_clips: int = 10,
-                      output_name: Optional[str] = None,
-                      add_music: bool = False,
-                      add_text_overlay: bool = True) -> Optional[Path]:
+    def generate_reel(
+        self,
+        clips: Optional[list[ClipInfo]] = None,
+        days: int = 7,
+        max_clips: int = 10,
+        output_name: Optional[str] = None,
+        add_music: bool = False,
+        add_text_overlay: bool = True,
+    ) -> Optional[Path]:
         """Generate a highlight reel video."""
         if clips is None:
             all_clips = self.get_clips(days=days)
@@ -177,12 +180,15 @@ class HighlightsGenerator:
             print(f"[Highlights] Error: {e}")
             return None
     
-    def generate_gif(self, clip_path: str, 
-                    output_path: Optional[str] = None,
-                    start_sec: float = 0,
-                    duration: float = 5,
-                    width: int = 480,
-                    fps: int = 15) -> Optional[Path]:
+    def generate_gif(
+        self,
+        clip_path: str,
+        output_path: Optional[str] = None,
+        start_sec: float = 0,
+        duration: float = 5,
+        width: int = 480,
+        fps: int = 15,
+    ) -> Optional[Path]:
         """Generate a GIF from a clip - perfect for social media sharing."""
         clip = Path(clip_path)
         if not clip.exists():
@@ -262,7 +268,7 @@ class HighlightsGenerator:
         }
 
 
-def main():
+def main() -> None:
     """CLI for highlight reel generation."""
     import argparse
     

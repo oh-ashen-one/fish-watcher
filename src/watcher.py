@@ -177,7 +177,7 @@ class FishWatcher:
             print(f"[FishWatcher] Notification failed: {result.message}")
 
 
-def main():
+def main() -> None:
     """Entry point."""
     import argparse
     

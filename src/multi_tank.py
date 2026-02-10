@@ -329,7 +329,7 @@ class MultiTankWatcher:
         return True
 
 
-def main():
+def main() -> None:
     """Entry point for multi-tank mode."""
     import argparse
     

@@ -124,7 +124,7 @@ class FishCounter:
         frame: np.ndarray,
         blobs: List[FishBlob],
         color: Tuple[int, int, int] = (0, 255, 0),
-        thickness: int = 2
+        thickness: int = 2,
     ) -> np.ndarray:
         """
         Draw detection boxes and count on frame.

@@ -116,7 +116,7 @@ class DiscordNotifier:
         messages = self.ALERT_MESSAGES.get(alert_type, ["🔔 Alert from your fish tank"])
         return random.choice(messages)
     
-    def notify(self, alert: Alert, clip_path: Optional[str] = None, 
+    def notify(self, alert: Alert, clip_path: Optional[str] = None,
                vision_analysis: Optional[dict] = None,
                fish_name: Optional[str] = None) -> bool:
         """Send alert to Discord."""
