@@ -28,6 +28,7 @@ def check_config():
             config = yaml.safe_load(f)
         return True, config
     except Exception as e:
+        print(f"[Status] Config parse error: {e}")
         return False, f"Config parse error: {e}"
 
 
@@ -83,8 +84,8 @@ def check_data():
         try:
             with open(today_file) as f:
                 return json.load(f)
-        except:
-            pass
+        except Exception as e:
+            print(f"[Status] Error loading daily data: {e}")
     return None
 
 
@@ -133,20 +134,20 @@ def main():
     try:
         import numpy
         print(f"   numpy: ✅ ({numpy.__version__})")
-    except:
-        print("   numpy: ❌")
+    except Exception as e:
+        print(f"   numpy: ❌ ({e})")
     
     try:
         import flask
         print(f"   flask: ✅ ({flask.__version__})")
-    except:
-        print("   flask: ❌")
+    except Exception as e:
+        print(f"   flask: ❌ ({e})")
     
     try:
         import anthropic
         print("   anthropic: ✅")
-    except:
-        print("   anthropic: ⚠️ (optional, for vision)")
+    except Exception as e:
+        print(f"   anthropic: ⚠️ (optional, for vision: {e})")
     
     print("\n" + "=" * 40)
     print("Run 'python run.py' to start monitoring")

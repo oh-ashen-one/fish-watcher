@@ -63,8 +63,8 @@ class TankMoodAnalyzer:
                         ts = datetime.fromtimestamp(alert.get("timestamp", 0))
                         if ts > cutoff:
                             alerts.append(alert)
-            except:
-                pass
+            except Exception as e:
+                print(f"[TankMood] Error reading alert log: {e}")
         
         return alerts
     
@@ -83,7 +83,8 @@ class TankMoodAnalyzer:
                     alert_type = parts[2]
                     stats[alert_type] += 1
                     stats["total"] += 1
-            except:
+            except Exception as e:
+                print(f"[TankMood] Error parsing clip {f.name}: {e}")
                 continue
         
         return dict(stats)
@@ -191,7 +192,8 @@ class TankMoodAnalyzer:
                     day = dt.strftime("%a")  # Mon, Tue, etc.
                     hour = dt.hour
                     heatmap[day][hour] += 1
-            except:
+            except Exception as e:
+                print(f"[TankMood] Error parsing clip for heatmap {f.name}: {e}")
                 continue
         
         return {day: dict(hours) for day, hours in heatmap.items()}
@@ -214,7 +216,8 @@ class TankMoodAnalyzer:
                         "day": dt.strftime("%A"),
                         "type": parts[2],
                     })
-            except:
+            except Exception as e:
+                print(f"[TankMood] Error parsing clip for favorites {f.name}: {e}")
                 continue
         
         if not clips:

@@ -132,8 +132,8 @@ class ReportGenerator:
             try:
                 with open(self.stats_file) as f:
                     return json.load(f)
-            except:
-                pass
+            except Exception as e:
+                print(f"[Reports] Error loading stats: {e}")
         return {}
     
     def _calculate_health_score(self, alerts_by_type: dict) -> int:

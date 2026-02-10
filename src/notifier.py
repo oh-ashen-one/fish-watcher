@@ -153,8 +153,8 @@ class ClawdbotNotifier:
             try:
                 with open(self.alert_log) as f:
                     history = json.load(f)
-            except:
-                pass
+            except Exception as e:
+                print(f"[Notifier] Error reading alert log: {e}")
         
         history.append({
             "type": alert.type.value,

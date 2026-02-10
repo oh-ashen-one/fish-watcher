@@ -47,7 +47,7 @@ def get_clips():
             try:
                 dt = datetime.strptime(f"{parts[0]}_{parts[1]}", "%Y%m%d_%H%M%S")
                 friendly = dt.strftime("%b %d, %I:%M %p")
-            except:
+            except Exception as e:
                 friendly = f.stem
             clips.append({
                 "filename": f.name,
@@ -65,7 +65,8 @@ def get_status():
         try:
             data = json.load(open(today_file))
             status.update(health_score=data.get("health_score"), alerts_today=data.get("alert_count", 0), clips_today=data.get("clip_count", 0))
-        except: pass
+        except Exception as e:
+            print(f"[Dashboard] Error loading daily data: {e}")
     clips = get_clips()
     if clips:
         status["last_alert"] = {"type": clips[0]["alert_type"], "time": clips[0]["friendly_time"]}

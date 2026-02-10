@@ -69,8 +69,8 @@ def status():
     if alert_file.exists():
         try:
             result["pending_alert"] = json.loads(alert_file.read_text())
-        except:
-            pass
+        except Exception as e:
+            print(f"[Controller] Error reading pending alert: {e}")
     
     print(json.dumps(result, indent=2))
     return result
