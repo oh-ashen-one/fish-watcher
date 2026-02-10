@@ -52,7 +52,7 @@ def get_clips() -> list[dict]:
             try:
                 dt = datetime.strptime(f"{parts[0]}_{parts[1]}", "%Y%m%d_%H%M%S")
                 friendly = dt.strftime("%b %d, %I:%M %p")
-            except Exception as e:
+            except Exception:
                 friendly = f.stem
             clips.append({
                 "filename": f.name,
